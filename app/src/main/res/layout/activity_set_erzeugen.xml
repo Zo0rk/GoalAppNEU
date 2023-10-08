@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SetErzeugen"
+    android:background="@color/black">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/setErzeugenHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="35dp"
+                android:layout_marginTop="35dp"
+                android:layout_marginBottom="15dp"
+                android:text="SET ERZEUGEN"
+                android:textColor="@color/white"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/setErzeugenNameHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="35dp"
+                android:layout_marginTop="35dp"
+                android:layout_marginBottom="15dp"
+                android:text="NAME:"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/setErzeugenNameEdit"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginHorizontal="35dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/darkgrey"
+                android:hint="Namen eingeben..."
+                android:textColorHint="@color/lightgrey"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/setErzeugenBeschrHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="35dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:text="BESCHREIBUNG:"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="20dp" />
+
+
+            <EditText
+                android:id="@+id/setErzeugenBeschrEdit"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginHorizontal="35dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/darkgrey"
+                android:hint="Beschreibung eingeben..."
+                android:gravity="left"
+                android:textColorHint="@color/lightgrey"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/setErzeugenFarbeHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="35dp"
+                android:layout_marginTop="15dp"
+                android:text="FARBE WÄHLEN:"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="20dp" />
+
+            <RadioGroup
+                android:id="@+id/setErzeugenRadioGr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="35dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/darkgrey">
+
+                <RadioButton
+                    android:id="@+id/setErzeugenRadioRed"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:buttonTint="@color/red"
+                    android:text="ROT"
+                    android:textColor="@color/red"></RadioButton>
+
+                <RadioButton
+                    android:id="@+id/setErzeugenRadioGruen"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:buttonTint="@color/green"
+                    android:text="GRÜN"
+                    android:textColor="@color/green"></RadioButton>
+
+                <RadioButton
+                    android:id="@+id/setErzeugenRadioGelb"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:buttonTint="@color/yellow"
+                    android:text="GELB"
+                    android:textColor="@color/yellow"></RadioButton>
+
+                <RadioButton
+                    android:id="@+id/setErzeugenRadioPurple"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:buttonTint="@color/purple"
+                    android:text="LILA"
+                    android:textColor="@color/purple"></RadioButton>
+
+                <RadioButton
+                    android:id="@+id/setErzeugenRadioOrange"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:buttonTint="@color/orange"
+                    android:text="ORANGE"
+                    android:textColor="@color/orange"></RadioButton>
+
+                <RadioButton
+                    android:id="@+id/setErzeugenRadioBlue"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:buttonTint="@color/blue"
+                    android:text="BLAU"
+                    android:textColor="@color/blue"></RadioButton>
+
+            </RadioGroup>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginVertical="50dp"
+                android:gravity="center_horizontal">
+
+                <Button
+                    android:id="@+id/abbrechen"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:text="ABBRECHEN"
+                    android:backgroundTint="@color/lightgrey"
+                    android:layout_marginHorizontal="30dp"
+                    app:cornerRadius="2dp" />
+                <Button
+                    android:id="@+id/speichern"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/lightgrey"
+                    android:layout_marginHorizontal="30dp"
+                    android:text="SPEICHERN"
+                    app:cornerRadius="2dp" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
