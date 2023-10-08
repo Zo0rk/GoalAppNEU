@@ -29,17 +29,25 @@ public class Setuebersicht extends AppCompatActivity {
     private int mainProgress;
     private int setID; //Dazu da, um die Stapel mit gleicher ID in das Set zu laden...
     private ListView setListe;
-    private Color color;
 
     private void buildUpFromDB(int id){
         setHeader = db.getSetName(id);
-        setHeaderView.setTextColor(476188);
         setBeschreibung = db.getSetBeschreibung(id);
         setFarbe = db.getSetFarbe(id);
         setHeaderView.setText(setHeader);
         progress = db.getSetProgress(id);
         progressView.setText(valueOf(progress) + "%");
         //setBeschreibungView.setText(setBeschreibung); IST JETZT FORTSCHRITT...
+
+        switch(setFarbe){
+            case "red":  setHeaderView.setTextColor(Color.parseColor("#ff756b")); break;
+            case "green":  setHeaderView.setTextColor(Color.parseColor("#7afa6e")); break;
+            case "yellow":  setHeaderView.setTextColor(Color.parseColor("#fff86b")); break;
+            case "purple":  setHeaderView.setTextColor(Color.parseColor("#fa6ef8")); break;
+            case "orange":  setHeaderView.setTextColor(Color.parseColor("#ffc98f")); break;
+            case "blue":  setHeaderView.setTextColor(Color.parseColor("#6ef8fa")); break;
+        }
+
     }
 
     @Override
@@ -50,7 +58,6 @@ public class Setuebersicht extends AppCompatActivity {
         setHeaderView = (TextView) findViewById(R.id.setHeader);
         setBeschreibungView = (TextView) findViewById(R.id.setBeschreibung);
         progressView = (TextView) findViewById(R.id.progressView);
-
 
         i = getIntent();
         id = i.getIntExtra("SET_ID",0);
