@@ -1,11 +1,10 @@
-package com.example.goalapp;
+package com.example.goalapp.activities;
 
 import static java.lang.String.valueOf;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.service.autofill.OnClickAction;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +13,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.goalapp.R;
+import com.example.goalapp.database.datenBankManager;
 
 public class Setuebersicht extends AppCompatActivity implements View.OnClickListener {
 
@@ -55,7 +57,6 @@ public class Setuebersicht extends AppCompatActivity implements View.OnClickList
             case "orange":  setHeaderView.setTextColor(Color.parseColor("#ffc98f")); break;
             case "blue":  setHeaderView.setTextColor(Color.parseColor("#6ef8fa")); break;
         }
-
     }
 
     @Override

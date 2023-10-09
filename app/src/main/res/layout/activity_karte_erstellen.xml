@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".KarteErstellen">
+    tools:context=".activities.KarteErstellen">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -88,7 +88,7 @@
 
             <Button
                 android:id="@+id/fertig"
-                android:layout_width="135dp"
+                android:layout_width="137dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="15dp"
@@ -98,7 +98,7 @@
 
             <Button
                 android:id="@+id/speichern"
-                android:layout_width="135dp"
+                android:layout_width="137dp"
                 android:layout_height="50dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="15dp"

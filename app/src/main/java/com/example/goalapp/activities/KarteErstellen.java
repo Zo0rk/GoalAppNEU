@@ -1,4 +1,4 @@
-package com.example.goalapp;
+package com.example.goalapp.activities;
 
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +7,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.goalapp.R;
+import com.example.goalapp.database.datenBankManager;
 
 public class KarteErstellen extends AppCompatActivity implements View.OnClickListener {
 

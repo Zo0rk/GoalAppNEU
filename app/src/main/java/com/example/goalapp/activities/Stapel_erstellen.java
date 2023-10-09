@@ -1,4 +1,4 @@
-package com.example.goalapp;
+package com.example.goalapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.goalapp.R;
+import com.example.goalapp.database.datenBankManager;
 
 
 public class Stapel_erstellen extends AppCompatActivity implements View.OnClickListener {

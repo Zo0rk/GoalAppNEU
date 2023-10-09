@@ -1,4 +1,4 @@
-package com.example.goalapp;
+package com.example.goalapp.database;
 
 import android.content.ContentValues;
 import android.content.Context;

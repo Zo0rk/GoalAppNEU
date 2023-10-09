@@ -1,10 +1,9 @@
-package com.example.goalapp;
+package com.example.goalapp.activities;
 
 import static java.lang.String.valueOf;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +11,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.goalapp.R;
+import com.example.goalapp.database.datenBankManager;
 
 public class SetErzeugen extends AppCompatActivity implements View.OnClickListener {
 
