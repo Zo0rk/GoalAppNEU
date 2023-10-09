@@ -13,6 +13,9 @@
         android:theme="@style/Theme.GoalApp"
         tools:targetApi="34">
         <activity
+            android:name=".Stapel_erstellen"
+            android:exported="false" />
+        <activity
             android:name=".Setuebersicht"
             android:exported="false" />
         <activity
@@ -22,9 +25,6 @@
             android:theme="@style/Theme.GoalApp" />
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Stapel"
             android:exported="false" />
         <activity
             android:name=".SetErzeugen"

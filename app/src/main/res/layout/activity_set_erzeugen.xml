@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SetErzeugen"
-    android:background="@color/black">
+    android:background="@color/midnight">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/black"
+            android:background="@color/midnight"
             android:orientation="vertical">
 
             <TextView
@@ -47,7 +47,7 @@
                 android:layout_height="35dp"
                 android:layout_marginHorizontal="35dp"
                 android:layout_marginBottom="15dp"
-                android:background="@color/darkgrey"
+                android:background="@color/midnight_light"
                 android:hint="Namen eingeben..."
                 android:textColorHint="@color/lightgrey"
                 android:textColor="@color/white"/>
@@ -71,7 +71,7 @@
                 android:layout_height="70dp"
                 android:layout_marginHorizontal="35dp"
                 android:layout_marginBottom="15dp"
-                android:background="@color/darkgrey"
+                android:background="@color/midnight_light"
                 android:hint="Beschreibung eingeben..."
                 android:gravity="left"
                 android:textColorHint="@color/lightgrey"
@@ -95,7 +95,7 @@
                 android:layout_marginHorizontal="35dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
-                android:background="@color/darkgrey">
+                android:background="@color/midnight_light">
 
                 <RadioButton
                     android:id="@+id/setErzeugenRadioRed"

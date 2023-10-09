@@ -56,7 +56,7 @@ public class datenBankManager extends SQLiteOpenHelper {
         db.insert("KARTE", null, neueZeile);
     }
     // STAPEL-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
-    public void insertStapel(String stapelName, String stapelBeschreibung, int stapelFarbe, int stapelStatus){
+    public void insertStapel(String stapelName, String stapelBeschreibung, String stapelFarbe, int stapelStatus){
         ContentValues neueZeile = new ContentValues();
         neueZeile.put("STAPEL_NAME",stapelName);
         neueZeile.put("STAPEL_BESCHREIBUNG",stapelBeschreibung);
@@ -64,6 +64,13 @@ public class datenBankManager extends SQLiteOpenHelper {
         neueZeile.put("STAPEL_STATUS",stapelStatus);
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert("STAPEL", null, neueZeile);
+    }
+    public int getMaxStapelID(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor maxID = db.rawQuery("SELECT MAX(STAPEL_ID) FROM STAPEL",null);
+        maxID.moveToFirst();
+        int id = maxID.getInt(0);
+        return id;
     }
     // SET-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
     public void insertSet(String name,String beschreibung, String farbe, int setStatus){
