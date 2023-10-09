@@ -9,7 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goalapp.R;
-import com.example.goalapp.database.datenBankManager;
+import com.example.goalapp.database.DatenBankManager;
 
 public class KarteErstellen extends AppCompatActivity implements View.OnClickListener {
 
@@ -19,7 +19,7 @@ public class KarteErstellen extends AppCompatActivity implements View.OnClickLis
     private int status;     // Zu beginn immer 1 -> [1-SCHLECHT] .. [2-MITTEL] .. [3-SICHER]
 
     // DATENBANK......................................
-    private datenBankManager db;
+    private DatenBankManager db;
 
     // UI-ELEMENTE....................................
     private Button fertig;
@@ -44,7 +44,7 @@ public class KarteErstellen extends AppCompatActivity implements View.OnClickLis
         fertig.setOnClickListener(this);
         hinzufuegen.setOnClickListener(this);
 
-        db = new datenBankManager(this);
+        db = new DatenBankManager(this);
     }
 
     @Override

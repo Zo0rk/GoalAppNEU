@@ -15,14 +15,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goalapp.R;
-import com.example.goalapp.database.datenBankManager;
+import com.example.goalapp.database.DatenBankManager;
 
 public class Setuebersicht extends AppCompatActivity implements View.OnClickListener {
 
     private int id;
     private Intent i;
     private Intent i2;
-    private datenBankManager db;
+    private DatenBankManager db;
 
     private int progress;
     private TextView setHeaderView;
@@ -73,7 +73,7 @@ public class Setuebersicht extends AppCompatActivity implements View.OnClickList
 
         i = getIntent();
         id = i.getIntExtra("SET_ID",0);
-        db = new datenBankManager(this);
+        db = new DatenBankManager(this);
         buildUpFromDB(id);
 
         i2 = new Intent(this,Stapel_erstellen.class);

@@ -5,13 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
-public class datenBankManager extends SQLiteOpenHelper {
+public class DatenBankManager extends SQLiteOpenHelper {
 
     public static final int DATENBANK_VERSION = 3;
     public static final String DATENBANK_NAMEN = "Karte.db";
-    public datenBankManager(Context cxt) {
+    public DatenBankManager(Context cxt) {
         super(cxt, DATENBANK_NAMEN, null, DATENBANK_VERSION);
     }
 
@@ -83,6 +82,20 @@ public class datenBankManager extends SQLiteOpenHelper {
         db.insert("STAPELSET", null, neueZeile);
     }
 
+    public Cursor getAllSets() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT SET_ID AS _id, SET_NAME, SET_BESCHREIBUNG, SET_FARBE, SET_STATUS FROM STAPELSET",null);
+        if(cursor != null && cursor.getCount() > 0)
+            cursor.moveToFirst();
+        return cursor;
+    }
+
+    public int getSetID(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM STAPELSET WHERE SET_ID =" + id,null);
+        cursor.moveToFirst();
+        return cursor.getInt(0);
+    }
     public int getMaxSetID(){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor maxID = db.rawQuery("SELECT MAX(SET_ID) FROM STAPELSET",null);

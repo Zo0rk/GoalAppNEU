@@ -13,7 +13,7 @@ import android.widget.RadioGroup;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goalapp.R;
-import com.example.goalapp.database.datenBankManager;
+import com.example.goalapp.database.DatenBankManager;
 
 public class SetErzeugen extends AppCompatActivity implements View.OnClickListener {
 
@@ -30,7 +30,7 @@ public class SetErzeugen extends AppCompatActivity implements View.OnClickListen
     private RadioGroup radioGroup;
     private RadioButton radioButton;
     private String radioSelection;
-    private datenBankManager db;
+    private DatenBankManager db;
     private Intent i;
 
     @Override
@@ -50,7 +50,7 @@ public class SetErzeugen extends AppCompatActivity implements View.OnClickListen
 
         radioGroup = findViewById(R.id.setErzeugenRadioGr);
 
-        db = new datenBankManager(this);
+        db = new DatenBankManager(this);
     }
 
     @Override
@@ -79,9 +79,10 @@ public class SetErzeugen extends AppCompatActivity implements View.OnClickListen
                         db.insertSet(setName, setBeschreibung,selectedColor,setStatus);
                         //Anschließend wird die Übersicht des Set mittels ID geöffnet...
                         //Dazu benötigen wir nun die ID:
-                        int maxID = db.getMaxSetID();
-                        i.putExtra("SET_ID",maxID);
-                        startActivity(i);
+//                        int maxID = db.getMaxSetID();
+//                        i.putExtra("SET_ID",maxID);
+//                        startActivity(i);
+                        finish();
                     }
                 }
             }

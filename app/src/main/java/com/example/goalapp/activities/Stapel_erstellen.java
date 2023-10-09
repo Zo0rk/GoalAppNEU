@@ -9,7 +9,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goalapp.R;
-import com.example.goalapp.database.datenBankManager;
+import com.example.goalapp.database.DatenBankManager;
 
 
 public class Stapel_erstellen extends AppCompatActivity implements View.OnClickListener {
@@ -20,7 +20,7 @@ public class Stapel_erstellen extends AppCompatActivity implements View.OnClickL
     private Button zurueck;
     private Button speichern;
 
-    private datenBankManager db;
+    private DatenBankManager db;
     private Intent i;
     private Intent i2;
     private Intent i3;
@@ -30,7 +30,7 @@ public class Stapel_erstellen extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stapel_erstellen);
 
-        db = new datenBankManager(this);
+        db = new DatenBankManager(this);
         i = new Intent(this, KarteErstellen.class);
         i2 = getIntent();
         i3 = new Intent(this, Setuebersicht.class);

@@ -6,14 +6,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.MainActivity">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/midnight">
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/midnight"
             android:orientation="vertical">
 
@@ -28,80 +23,6 @@
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:textSize="40dp" />
-
-            <FrameLayout
-                android:id="@+id/mainView"
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_marginHorizontal="35dp"
-                android:layout_marginBottom="30dp"
-                android:padding="15dp"
-                android:background="@color/midnight_light"
-                android:gravity="center_vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center_horizontal">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/mainText"
-                            android:layout_width="130dp"
-                            android:layout_height="wrap_content"
-                            android:text="Biologie"
-                            android:textColor="@color/white"
-                            android:textSize="30dp" />
-
-                        <TextView
-                            android:id="@+id/mainTextDescription"
-                            android:layout_width="130dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:text="Nachklausur zum 14.01.2022"
-                            android:textColor="@color/white"
-                            android:textSize="15dp" />
-
-                        <TextView
-                            android:id="@+id/mainTextProgress"
-                            android:layout_width="130dp"
-                            android:layout_height="wrap_content"
-                            android:text="~30%"
-                            android:textColor="@color/white"
-                            android:textSize="40dp" />
-
-                    </LinearLayout>
-
-                    <Space
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <ProgressBar
-                            android:progressTint="@color/white"
-                            android:id="@+id/MainProgressBar"
-                            android:layout_width="130dp"
-                            android:layout_height="130dp"
-                            android:indeterminate="false"
-                            android:progressDrawable="@drawable/circular_progress_bar"
-                            android:background="@drawable/circle_shape"
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:max="100"
-                            android:progress="50" />
-                    </LinearLayout>
-                </LinearLayout>
-
-            </FrameLayout>
 
             <TextView
                 android:id="@+id/mainStapelHeader"
@@ -118,22 +39,21 @@
             <Button
                 android:id="@+id/newButton"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="58dp"
                 android:layout_marginHorizontal="35dp"
                 android:layout_marginVertical="10dp"
                 android:backgroundTint="@color/midnight_light"
+                android:textColor="@color/white"
                 android:text="NEW"
                 app:cornerRadius="3dp" />
-
             <ListView
+                android:id="@+id/setUebersichtListView"
                 android:layout_width="match_parent"
-                android:layout_height="90dp"
-                android:background="@color/midnight_light"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="35dp"
-                android:layout_marginVertical="5dp"/>
-
+                android:layout_marginVertical="5dp"
+                android:background="@color/midnight_light" />
 
         </LinearLayout>
-    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
