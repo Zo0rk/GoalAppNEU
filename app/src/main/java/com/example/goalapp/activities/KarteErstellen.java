@@ -15,7 +15,7 @@ public class KarteErstellen extends AppCompatActivity implements View.OnClickLis
 
     private String frage;
     private String antwort;
-    private int STAPEL_ID;     // Zu welchem Stapel gehören die karten?
+    private int stapel_id;     // Zu welchem Stapel gehören die karten?
     private int status;     // Zu beginn immer 1 -> [1-SCHLECHT] .. [2-MITTEL] .. [3-SICHER]
 
     // DATENBANK......................................
@@ -34,12 +34,14 @@ public class KarteErstellen extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_karte_erstellen);
 
+        stapel_id = getIntent().getIntExtra("STAPEL_ID", 999999); //nicht 0 sonst kommt es evtl in den Falschen Stapel
+
         fertig = findViewById(R.id.fertig);
         hinzufuegen = findViewById(R.id.speichern);
         antwortEdit = findViewById(R.id.antwortEdit);
         frageEdit = findViewById(R.id.frageEdit);
 
-        toast = Toast.makeText(this, "✓ Karte hinzugefügt!", Toast.LENGTH_SHORT);
+
 
         fertig.setOnClickListener(this);
         hinzufuegen.setOnClickListener(this);
@@ -55,7 +57,9 @@ public class KarteErstellen extends AppCompatActivity implements View.OnClickLis
             antwort = antwortEdit.getText().toString();
 
             if(!(frage == null || antwort == null || frage.trim().equals("") || antwort.trim().equals(""))){
-                db.insertKarte(frage,antwort,1,1);
+                db.insertKarte(frage,antwort,stapel_id,1);
+                DatenBankManager datenBankManager = new DatenBankManager(this);
+                toast = Toast.makeText(this, "✓ Karte hinzugefügt! " + "Amzahl Karten im Stapel: "+ datenBankManager.countKarten(), Toast.LENGTH_SHORT);
                 toast.show();
                 antwortEdit.getText().clear();
                 frageEdit.getText().clear();

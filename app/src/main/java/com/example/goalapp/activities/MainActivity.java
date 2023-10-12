@@ -31,13 +31,6 @@ public class MainActivity extends AppCompatActivity  {
             startActivity(intent);
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-            }
-        });
-
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
             //Rufe SetUebersichtActivity auf
             //brauche id des geklickten Sets

@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -54,6 +55,14 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
             Intent intent2 = new Intent(this,Stapel_erstellen.class);
             intent2.putExtra("SET_ID",setID);
             startActivity(intent2);
+        });
+
+        stapelListView.setOnItemClickListener((adapterView, view, i, l) -> {
+            DatenBankManager db = new DatenBankManager(this);
+            Intent intent3 = new Intent(this, KarteErstellen.class);
+            int id = db.getStapelID(i+1); //i+1, da Listelemente ab 0 gezählt werden
+            intent3.putExtra("STAPEL_ID", id);
+            startActivity(intent3);
         });
         /*setHeaderView.setText(setHeader);
         setBeschreibungView.setText(setBeschreibung);*/
