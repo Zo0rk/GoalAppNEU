@@ -37,7 +37,7 @@
         android:layout_marginRight="25dp">
 
         <TextView
-            android:id="@+id/textViewNumber1"
+            android:id="@+id/blueNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="2dp"
@@ -46,7 +46,7 @@
             android:textSize="25dp" />
 
         <TextView
-            android:id="@+id/textViewNumber2"
+            android:id="@+id/redNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="2dp"
@@ -55,7 +55,7 @@
             android:textSize="25dp" />
 
         <TextView
-            android:id="@+id/textViewNumber3"
+            android:id="@+id/greenNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="2dp"

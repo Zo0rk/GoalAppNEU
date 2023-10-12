@@ -59,15 +59,17 @@ public class KarteErstellen extends AppCompatActivity implements View.OnClickLis
             if(!(frage == null || antwort == null || frage.trim().equals("") || antwort.trim().equals(""))){
                 db.insertKarte(frage,antwort,stapel_id,1);
                 DatenBankManager datenBankManager = new DatenBankManager(this);
-                toast = Toast.makeText(this, "✓ Karte hinzugefügt! " + "Amzahl Karten im Stapel: "+ datenBankManager.countKarten(), Toast.LENGTH_SHORT);
+                toast = Toast.makeText(this, "✓ Karte hinzugefügt! ", Toast.LENGTH_SHORT);
                 toast.show();
                 antwortEdit.getText().clear();
                 frageEdit.getText().clear();
+                finish();
             }
         }
 
         if(v == fertig){
             // Muss noch implementiert werden -> zurück auf die Übersicht...
+            finish();
         }
     }
 }

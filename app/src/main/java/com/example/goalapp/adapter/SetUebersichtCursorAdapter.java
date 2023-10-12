@@ -1,14 +1,17 @@
 package com.example.goalapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.goalapp.R;
+import com.example.goalapp.database.DatenBankManager;
 
 public class SetUebersichtCursorAdapter extends CursorAdapter {
 
@@ -26,8 +29,16 @@ public class SetUebersichtCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        DatenBankManager db = new DatenBankManager(context);
+
+        String stapelId = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
         String stapelName = cursor.getString(cursor.getColumnIndexOrThrow("STAPEL_NAME"));
-        TextView textView = view.findViewById(R.id.stapelListenElementName);
-        textView.setText(stapelName);
+
+        int count = db.countKarten(Integer.parseInt(stapelId));
+        TextView blueNumber = view.findViewById(R.id.blueNumber);
+        blueNumber.setText(""+count);
+
+        TextView name = view.findViewById(R.id.stapelListenElementName);
+        name.setText(stapelName);
     }
 }

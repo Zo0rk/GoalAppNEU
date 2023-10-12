@@ -32,9 +32,9 @@ public class DatenBankManager extends SQLiteOpenHelper {
                         "KARTE_ID" + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "KARTE_FRAGE" + " TEXT," +
                         "KARTE_ANTWORT" + " TEXT," +
-                        "KARTE_STAPEL" + " INTEGER," +
+                        "STAPEL_ID" + " INTEGER," +
                         "KARTE_STATUS" + " INTEGER," +
-                        "FOREIGN KEY (KARTE_STAPEL) REFERENCES STAPEL(STAPEL_ID) ON DELETE CASCADE" +
+                        "FOREIGN KEY (STAPEL_ID) REFERENCES STAPEL(STAPEL_ID) ON DELETE CASCADE" +
                          ")"
         );
         db.execSQL(
@@ -52,15 +52,15 @@ public class DatenBankManager extends SQLiteOpenHelper {
         ContentValues neueZeile = new ContentValues();
         neueZeile.put("KARTE_FRAGE", frage);
         neueZeile.put("KARTE_ANTWORT", antwort);
-        neueZeile.put("KARTE_STAPEL", stapel);
+        neueZeile.put("STAPEL_ID", stapel);
         neueZeile.put("KARTE_STATUS", status);
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert("KARTE", null, neueZeile);
     }
 
-    public int countKarten() {
+    public int countKarten(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM KARTE", null);
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM KARTE WHERE STAPEL_ID =" +id, null);
         int count = 0;
         if(cursor.moveToFirst()) {
             count = cursor.getInt(0);
