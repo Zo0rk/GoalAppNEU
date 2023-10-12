@@ -22,8 +22,10 @@ public class DatenBankManager extends SQLiteOpenHelper {
                         "STAPEL_NAME" + " TEXT," +
                         "STAPEL_BESCHREIBUNG" + " TEXT," +
                         "STAPEL_FARBE" + " TEXT," +
-                        "STAPEL_STATUS" + " INTEGER"
-                        + ")"
+                        "STAPEL_STATUS" + " INTEGER,"+
+                        "STAPELSET_ID" + " INTEGER, " + // Fremdschlüssel auf STAPELSET
+                        "FOREIGN KEY (STAPELSET_ID) REFERENCES STAPELSET(SET_ID) ON DELETE CASCADE" +
+                         ")"
         );
         db.execSQL(
                 "CREATE TABLE " + "KARTE" + " (" +
@@ -31,8 +33,9 @@ public class DatenBankManager extends SQLiteOpenHelper {
                         "KARTE_FRAGE" + " TEXT," +
                         "KARTE_ANTWORT" + " TEXT," +
                         "KARTE_STAPEL" + " INTEGER," +
-                        "KARTE_STATUS" + " INTEGER"
-                        + ")"
+                        "KARTE_STATUS" + " INTEGER," +
+                        "FOREIGN KEY (KARTE_STAPEL) REFERENCES STAPEL(STAPEL_ID) ON DELETE CASCADE" +
+                         ")"
         );
         db.execSQL(
                 "CREATE TABLE " + "STAPELSET" + " (" +
@@ -55,12 +58,13 @@ public class DatenBankManager extends SQLiteOpenHelper {
         db.insert("KARTE", null, neueZeile);
     }
     // STAPEL-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
-    public void insertStapel(String stapelName, String stapelBeschreibung, String stapelFarbe, int stapelStatus){
+    public void insertStapel(String stapelName, String stapelBeschreibung, String stapelFarbe, int stapelStatus, int stapelsetID){
         ContentValues neueZeile = new ContentValues();
         neueZeile.put("STAPEL_NAME",stapelName);
         neueZeile.put("STAPEL_BESCHREIBUNG",stapelBeschreibung);
         neueZeile.put("STAPEL_FARBE",stapelFarbe);
         neueZeile.put("STAPEL_STATUS",stapelStatus);
+        neueZeile.put("STAPELSET_ID", stapelsetID);
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert("STAPEL", null, neueZeile);
     }
@@ -70,6 +74,14 @@ public class DatenBankManager extends SQLiteOpenHelper {
         maxID.moveToFirst();
         int id = maxID.getInt(0);
         return id;
+    }
+
+    public Cursor getAllStapelFromSetID(int setId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT STAPEL_ID AS _id, STAPEL_NAME FROM STAPEL WHERE STAPELSET_ID ="+setId, null);
+        if(cursor!= null)
+         cursor.moveToFirst();
+        return cursor;
     }
     // SET-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
     public void insertSet(String name,String beschreibung, String farbe, int setStatus){
@@ -85,7 +97,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
     public Cursor getAllSets() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT SET_ID AS _id, SET_NAME, SET_BESCHREIBUNG, SET_FARBE, SET_STATUS FROM STAPELSET",null);
-        if(cursor != null && cursor.getCount() > 0)
+        if(cursor != null)
             cursor.moveToFirst();
         return cursor;
     }

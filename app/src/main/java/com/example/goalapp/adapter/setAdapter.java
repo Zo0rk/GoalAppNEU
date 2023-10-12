@@ -1,4 +1,4 @@
-package com.example.goalapp.activities;
+package com.example.goalapp.adapter;
 
 import android.content.Context;
 import android.database.Cursor;

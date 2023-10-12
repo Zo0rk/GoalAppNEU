@@ -3,11 +3,11 @@ package com.example.goalapp.activities;
 import static java.lang.String.valueOf;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -15,15 +15,12 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goalapp.R;
+import com.example.goalapp.adapter.SetUebersichtCursorAdapter;
+import com.example.goalapp.adapter.setAdapter;
 import com.example.goalapp.database.DatenBankManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class Setuebersicht extends AppCompatActivity implements View.OnClickListener {
-
-    private int id;
-    private Intent i;
-    private Intent i2;
-    private DatenBankManager db;
-
+public class SetUebersichtActivity extends AppCompatActivity implements View.OnClickListener {
     private int progress;
     private TextView setHeaderView;
     private String setHeader;
@@ -33,12 +30,46 @@ public class Setuebersicht extends AppCompatActivity implements View.OnClickList
     private String setFarbe;
     private ProgressBar mainProgressBar;
     private int mainProgress;
-    private int setID; //Dazu da, um die Stapel mit gleicher ID in das Set zu laden...
-    private ListView setListe;
+    int setID; //Dazu da, um die Stapel mit gleicher ID in das Set zu laden...
+    ListView stapelListView;
+    private FloatingActionButton neu;
 
-    private Button neu;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_set_uebersicht);
+
+        setHeaderView = findViewById(R.id.setHeader);
+        setBeschreibungView = findViewById(R.id.setBeschreibung);
+        progressView = findViewById(R.id.progressView);
+        mainProgressBar = findViewById(R.id.MainProgressBar);
+        stapelListView = findViewById(R.id.stapelListView);
+        neu = findViewById(R.id.addButton);
+
+        Intent intent = getIntent();
+        setID = intent.getIntExtra("SET_ID", 0);
+        buildUpFromDB(setID);
+
+        neu.setOnClickListener(view -> {
+            Intent intent2 = new Intent(this,Stapel_erstellen.class);
+            intent2.putExtra("SET_ID",setID);
+            startActivity(intent2);
+        });
+        /*setHeaderView.setText(setHeader);
+        setBeschreibungView.setText(setBeschreibung);*/
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DatenBankManager db = new DatenBankManager(this);
+        Cursor cursor = db.getAllStapelFromSetID(setID);
+        SetUebersichtCursorAdapter adapter = new SetUebersichtCursorAdapter(this, cursor);
+        stapelListView.setAdapter(adapter);
+    }
 
     private void buildUpFromDB(int id){
+        DatenBankManager db = new DatenBankManager(this);
         setHeader = db.getSetName(id);
         setBeschreibung = db.getSetBeschreibung(id);
         setFarbe = db.getSetFarbe(id);
@@ -60,39 +91,7 @@ public class Setuebersicht extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_uebersicht);
+    public void onClick(View view) {
 
-        setHeaderView = (TextView) findViewById(R.id.setHeader);
-        setBeschreibungView = (TextView) findViewById(R.id.setBeschreibung);
-        progressView = (TextView) findViewById(R.id.progressView);
-        mainProgressBar = (ProgressBar) findViewById(R.id.MainProgressBar);
-        neu = (Button) findViewById(R.id.newButton);
-        neu.setOnClickListener(this);
-
-        i = getIntent();
-        id = i.getIntExtra("SET_ID",0);
-        db = new DatenBankManager(this);
-        buildUpFromDB(id);
-
-        i2 = new Intent(this,Stapel_erstellen.class);
-        i2.putExtra("SET_ID",id);
-
-        /*setHeaderView.setText(setHeader);
-        setBeschreibungView.setText(setBeschreibung);*/
-
-        //LISTE FÜLLEN MIT STAPELN ÜBER SET_ID....
-        //mainProgress aus dem Inhalten der Liste berechnen...
-        //mainProgress auf die ProgressBar anwenden...
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        if(v == neu){
-            Log.d("TEST","???");
-            startActivity(i2);
-        }
     }
 }

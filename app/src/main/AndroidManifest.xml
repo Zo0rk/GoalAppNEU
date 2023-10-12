@@ -16,7 +16,7 @@
             android:name=".activities.Stapel_erstellen"
             android:exported="false" />
         <activity
-            android:name=".activities.Setuebersicht"
+            android:name=".activities.SetUebersichtActivity"
             android:exported="false" />
         <activity
             android:name=".activities.set_listitem"

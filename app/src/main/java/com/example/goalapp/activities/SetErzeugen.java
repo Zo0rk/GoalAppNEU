@@ -17,28 +17,18 @@ import com.example.goalapp.database.DatenBankManager;
 
 public class SetErzeugen extends AppCompatActivity implements View.OnClickListener {
 
-    private String setName;
-    private String setBeschreibung;
-    private String setFarbe;
-    private int setStatus;
-
     private Button abbrechen;
     private Button speichern;
-
     private EditText setNameEdit;
     private EditText setBeschreibungEdit;
     private RadioGroup radioGroup;
     private RadioButton radioButton;
     private String radioSelection;
-    private DatenBankManager db;
-    private Intent i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_erzeugen);
-
-        i = new Intent(this, Setuebersicht.class);
 
         abbrechen = findViewById(R.id.abbrechen);
         speichern = findViewById(R.id.speichern);
@@ -50,7 +40,7 @@ public class SetErzeugen extends AppCompatActivity implements View.OnClickListen
 
         radioGroup = findViewById(R.id.setErzeugenRadioGr);
 
-        db = new DatenBankManager(this);
+
     }
 
     @Override
@@ -60,14 +50,15 @@ public class SetErzeugen extends AppCompatActivity implements View.OnClickListen
                 if(!(setBeschreibungEdit.getText() == null || setBeschreibungEdit.getText().toString().trim().equals(""))){
                     if(!(radioGroup.getCheckedRadioButtonId() == -1)){
 
-                        setName = setNameEdit.getText().toString();
-                        setBeschreibung = setBeschreibungEdit.getText().toString();
-                        setStatus = 0;
+                        DatenBankManager db = new DatenBankManager(this);
+                        String setName = setNameEdit.getText().toString();
+                        String setBeschreibung = setBeschreibungEdit.getText().toString();
+                        int setStatus = 0;
 
                         //Hier wird die ausgewählte Farbe zu einem String umgewandelt...
                         radioButton = (RadioButton)findViewById(radioGroup.getCheckedRadioButtonId());
                         String selectedColor = radioButton.getText().toString();
-                        switch (selectedColor){
+                        switch (selectedColor) {
                             case "ROT": selectedColor = "red"; break;
                             case "GRÜN": selectedColor = "green"; break;
                             case "GELB": selectedColor = "yellow"; break;

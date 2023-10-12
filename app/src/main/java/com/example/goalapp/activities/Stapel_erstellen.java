@@ -16,30 +16,32 @@ public class Stapel_erstellen extends AppCompatActivity implements View.OnClickL
 
     private EditText name;
     private EditText beschreibung;
-
     private Button zurueck;
     private Button speichern;
-
     private DatenBankManager db;
     private Intent i;
     private Intent i2;
     private Intent i3;
+    int setID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stapel_erstellen);
 
+        Intent intent = getIntent();
+        setID = intent.getIntExtra("SET_ID", 0);
+
         db = new DatenBankManager(this);
         i = new Intent(this, KarteErstellen.class);
         i2 = getIntent();
-        i3 = new Intent(this, Setuebersicht.class);
+        i3 = new Intent(this, SetUebersichtActivity.class);
 
-        name = (EditText) findViewById(R.id.nameEdit);
-        beschreibung = (EditText) findViewById(R.id.beschreibungEdit);
+        name = findViewById(R.id.nameEdit);
+        beschreibung = findViewById(R.id.beschreibungEdit);
 
-        zurueck = (Button) findViewById(R.id.zurueck);
-        speichern = (Button) findViewById(R.id.speichern);
+        zurueck = findViewById(R.id.zurueck);
+        speichern =  findViewById(R.id.speichern);
 
         zurueck.setOnClickListener(this);
         speichern.setOnClickListener(this);
@@ -51,14 +53,15 @@ public class Stapel_erstellen extends AppCompatActivity implements View.OnClickL
             if(name.getText().toString() != null || name.getText().toString().trim() != ""){
                 if(beschreibung.getText().toString() != null || beschreibung.getText().toString().trim() != ""){
                     int setID = i2.getIntExtra("SET_ID",0);
-                    db.insertStapel(name.getText().toString(), beschreibung.getText().toString(),db.getSetFarbe(setID),0);
-                    i.putExtra("STAPEL_ID",db.getMaxStapelID());
-                    startActivity(i);
+                    db.insertStapel(name.getText().toString(), beschreibung.getText().toString(),db.getSetFarbe(setID), 0,setID);//setFarbe vlt über intent mitgeben
+//                    i.putExtra("STAPEL_ID",db.getMaxStapelID());
+//                    startActivity(i);
+                    finish();
                 }
             }
         }
         if(v == zurueck){
-
+            finish();
         }
     }
 }

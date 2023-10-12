@@ -1,4 +1,4 @@
-package com.example.goalapp;
+package com.example.goalapp.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -10,11 +10,13 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
-public class MainCursorAdapter extends CursorAdapter {
+import com.example.goalapp.R;
+
+public class MainUebersichtCursorAdapter extends CursorAdapter {
 
     Context context;
 
-    public MainCursorAdapter(Context context, Cursor cursor) {
+    public MainUebersichtCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
         this.context = context;
     }
@@ -22,7 +24,7 @@ public class MainCursorAdapter extends CursorAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         // Inflates the custom list item layout
         return LayoutInflater.from(context).inflate(R.layout.set_listelement, parent, false);
-    }
+}
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {

@@ -5,18 +5,18 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.goalapp.MainCursorAdapter;
+import com.example.goalapp.adapter.MainUebersichtCursorAdapter;
 import com.example.goalapp.R;
 import com.example.goalapp.database.DatenBankManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity  {
 
-    Button newButton;
+    FloatingActionButton newButton;
     ListView listView;
 
     @Override
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity  {
             //Anschließend wird die Übersicht des Set mittels ID geöffnet...
             //Dazu benötigen wir nun die ID:
             DatenBankManager db = new DatenBankManager(this);
-            Intent intent = new Intent(this, Setuebersicht.class);
+            Intent intent = new Intent(this, SetUebersichtActivity.class);
             int id = db.getSetID(i+1); //i+1, da Listelemente ab 0 gezählt werden
             intent.putExtra("SET_ID", id);
             startActivity(intent);
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity  {
         // Erstelle oder erhalte eine Cursor mit den Daten aus der Datenbank
         DatenBankManager db = new DatenBankManager(this);
         Cursor cursor = db.getAllSets();
-        MainCursorAdapter adapter = new MainCursorAdapter(this, cursor);
+        MainUebersichtCursorAdapter adapter = new MainUebersichtCursorAdapter(this, cursor);
         listView.setAdapter(adapter);
 
     }
