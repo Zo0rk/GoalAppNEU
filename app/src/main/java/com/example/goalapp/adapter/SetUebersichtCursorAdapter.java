@@ -29,12 +29,13 @@ public class SetUebersichtCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        DatenBankManager db = new DatenBankManager(context);
-
         String stapelId = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
         String stapelName = cursor.getString(cursor.getColumnIndexOrThrow("STAPEL_NAME"));
+        String setId = cursor.getString(cursor.getColumnIndexOrThrow("SET_ID"));
 
-        int count = db.countKarten(Integer.parseInt(stapelId));
+        DatenBankManager db = new DatenBankManager(context);
+        int count = db.countKartenInSetUndStapel(setId, stapelId);
+
         TextView blueNumber = view.findViewById(R.id.blueNumber);
         blueNumber.setText(""+count);
 

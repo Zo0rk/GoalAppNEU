@@ -21,7 +21,6 @@ public class Stapel_erstellen extends AppCompatActivity implements View.OnClickL
     private DatenBankManager db;
     private Intent i;
     private Intent i2;
-    private Intent i3;
     int setID;
 
     @Override
@@ -33,9 +32,8 @@ public class Stapel_erstellen extends AppCompatActivity implements View.OnClickL
         setID = intent.getIntExtra("SET_ID", 0);
 
         db = new DatenBankManager(this);
-        i = new Intent(this, KarteErstellen.class);
+        i = new Intent(this, KarteErstellenActivity.class);
         i2 = getIntent();
-        i3 = new Intent(this, SetUebersichtActivity.class);
 
         name = findViewById(R.id.nameEdit);
         beschreibung = findViewById(R.id.beschreibungEdit);

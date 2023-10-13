@@ -11,11 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.goalapp.R;
 import com.example.goalapp.database.DatenBankManager;
 
-public class KarteErstellen extends AppCompatActivity implements View.OnClickListener {
+public class KarteErstellenActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String frage;
     private String antwort;
     private int stapel_id;     // Zu welchem Stapel gehören die karten?
+    private int set_id;
     private int status;     // Zu beginn immer 1 -> [1-SCHLECHT] .. [2-MITTEL] .. [3-SICHER]
 
     // DATENBANK......................................
@@ -28,6 +29,7 @@ public class KarteErstellen extends AppCompatActivity implements View.OnClickLis
     private EditText antwortEdit;
     private Toast toast;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -35,18 +37,17 @@ public class KarteErstellen extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_karte_erstellen);
 
         stapel_id = getIntent().getIntExtra("STAPEL_ID", 999999); //nicht 0 sonst kommt es evtl in den Falschen Stapel
+        set_id = getIntent().getIntExtra("SET_ID", 99999);
 
         fertig = findViewById(R.id.fertig);
         hinzufuegen = findViewById(R.id.speichern);
         antwortEdit = findViewById(R.id.antwortEdit);
         frageEdit = findViewById(R.id.frageEdit);
 
-
-
         fertig.setOnClickListener(this);
         hinzufuegen.setOnClickListener(this);
 
-        db = new DatenBankManager(this);
+
     }
 
     @Override
@@ -57,12 +58,15 @@ public class KarteErstellen extends AppCompatActivity implements View.OnClickLis
             antwort = antwortEdit.getText().toString();
 
             if(!(frage == null || antwort == null || frage.trim().equals("") || antwort.trim().equals(""))){
-                db.insertKarte(frage,antwort,stapel_id,1);
-                DatenBankManager datenBankManager = new DatenBankManager(this);
+                DatenBankManager db = new DatenBankManager(this);
+                db.insertKarte(frage, antwort, stapel_id, set_id,1);
+
                 toast = Toast.makeText(this, "✓ Karte hinzugefügt! ", Toast.LENGTH_SHORT);
                 toast.show();
+
                 antwortEdit.getText().clear();
                 frageEdit.getText().clear();
+
                 finish();
             }
         }

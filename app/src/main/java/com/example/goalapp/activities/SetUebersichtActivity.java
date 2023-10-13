@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -17,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goalapp.R;
 import com.example.goalapp.adapter.SetUebersichtCursorAdapter;
-import com.example.goalapp.adapter.setAdapter;
 import com.example.goalapp.database.DatenBankManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -47,22 +44,22 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
         stapelListView = findViewById(R.id.stapelListView);
         neu = findViewById(R.id.addButton);
 
-        Intent intent = getIntent();
-        setID = intent.getIntExtra("SET_ID", 0);
+        setID = getIntent().getIntExtra("SET_ID", 0);
         buildUpFromDB(setID);
 
+        // Erstellt einen neuen Stapel im Set mit entsprechender set-id
         neu.setOnClickListener(view -> {
             Intent intent2 = new Intent(this,Stapel_erstellen.class);
             intent2.putExtra("SET_ID",setID);
             startActivity(intent2);
         });
 
+        // Öffnet zur Zeit Kartenerstellung Activity
         stapelListView.setOnItemClickListener((adapterView, view, i, l) -> {
-            DatenBankManager db = new DatenBankManager(this);
-            Intent intent3 = new Intent(this, KarteErstellen.class);
-            int id = db.getStapelID(i+1); //i+1, da Listelemente ab 0 gezählt werden
-            intent3.putExtra("STAPEL_ID", id);
-            startActivity(intent3);
+            Intent intent = new Intent(this, KarteErstellenActivity.class);
+            intent.putExtra("STAPEL_ID", i+1);
+            intent.putExtra("SET_ID", setID);
+            startActivity(intent);
         });
         /*setHeaderView.setText(setHeader);
         setBeschreibungView.setText(setBeschreibung);*/
