@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,7 +68,9 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
 
         // Öffnet zur Zeit Kartenerstellung Activity
         stapelListView.setOnItemClickListener((adapterView, view, i, l) -> {
-            Intent intent = new Intent(this, KarteErstellenActivity.class);
+
+            // CODE HINZUFÜGEN ZUM ERSTELLEN ODER SPIELEN....
+            Intent intent = new Intent(this, Lernen.class);
             int stapelID = (int) adapter.getItemId(i);
             intent.putExtra("STAPEL_ID", stapelID);
             intent.putExtra("SET_ID", setID);
