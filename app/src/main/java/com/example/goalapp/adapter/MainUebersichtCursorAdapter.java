@@ -2,15 +2,19 @@ package com.example.goalapp.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
 import com.example.goalapp.R;
+
+import java.util.Map;
 
 public class MainUebersichtCursorAdapter extends CursorAdapter {
 
@@ -29,6 +33,7 @@ public class MainUebersichtCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         //Retrieve Data from cursor
+        int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
         String setName = cursor.getString(cursor.getColumnIndexOrThrow("SET_NAME"));
         String setFarbe = cursor.getString(cursor.getColumnIndexOrThrow("SET_FARBE"));
         String setStatus = cursor.getString(cursor.getColumnIndexOrThrow("SET_STATUS"));
@@ -40,7 +45,19 @@ public class MainUebersichtCursorAdapter extends CursorAdapter {
         int colorRes = context.getResources().getIdentifier(setFarbe, "color", context.getPackageName());
         int textColor = ContextCompat.getColor(context, colorRes);
         nameTextView.setTextColor(textColor);
+    }
 
+    @Override
+    public long getItemId(int position) {
+        if (getCursor() != null) {
+            // Bewegen Sie den Cursor zur gewünschten Position
+            getCursor().moveToPosition(position);
 
+            // Hier können Sie die ID aus der Datenbank abrufen
+            long itemId = getCursor().getInt(getCursor().getColumnIndexOrThrow("_id"));
+            Log.d("Debug", "Set ID: "+itemId);
+            return itemId;
+        }
+        return super.getItemId(position);
     }
 }
