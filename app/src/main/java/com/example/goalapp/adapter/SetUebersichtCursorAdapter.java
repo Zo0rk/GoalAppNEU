@@ -3,6 +3,7 @@ package com.example.goalapp.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,5 +42,19 @@ public class SetUebersichtCursorAdapter extends CursorAdapter {
 
         TextView name = view.findViewById(R.id.stapelListenElementName);
         name.setText(stapelName);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if (getCursor() != null) {
+            // Bewegen Sie den Cursor zur gewünschten Position
+            getCursor().moveToPosition(position);
+
+            // Hier können Sie die ID aus der Datenbank abrufen
+            long itemId = getCursor().getInt(getCursor().getColumnIndexOrThrow("_id"));
+            Log.d("Debug", "Stapel ID: "+itemId);
+            return itemId;
+        }
+        return super.getItemId(position);
     }
 }

@@ -2,11 +2,16 @@ package com.example.goalapp.activities;
 
 import static java.lang.String.valueOf;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -14,6 +19,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goalapp.R;
+import com.example.goalapp.adapter.MainUebersichtCursorAdapter;
 import com.example.goalapp.adapter.SetUebersichtCursorAdapter;
 import com.example.goalapp.database.DatenBankManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -32,6 +38,8 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
     ListView stapelListView;
     private FloatingActionButton neu;
 
+    SetUebersichtCursorAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +50,8 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
         progressView = findViewById(R.id.progressView);
         mainProgressBar = findViewById(R.id.MainProgressBar);
         stapelListView = findViewById(R.id.stapelListView);
+        registerForContextMenu(stapelListView);
+
         neu = findViewById(R.id.addButton);
 
         setID = getIntent().getIntExtra("SET_ID", 0);
@@ -57,7 +67,8 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
         // Öffnet zur Zeit Kartenerstellung Activity
         stapelListView.setOnItemClickListener((adapterView, view, i, l) -> {
             Intent intent = new Intent(this, KarteErstellenActivity.class);
-            intent.putExtra("STAPEL_ID", i+1);
+            int stapelID = (int) adapter.getItemId(i);
+            intent.putExtra("STAPEL_ID", stapelID);
             intent.putExtra("SET_ID", setID);
             startActivity(intent);
         });
@@ -70,7 +81,7 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
         super.onResume();
         DatenBankManager db = new DatenBankManager(this);
         Cursor cursor = db.getAllStapelFromSetID(setID);
-        SetUebersichtCursorAdapter adapter = new SetUebersichtCursorAdapter(this, cursor);
+        adapter = new SetUebersichtCursorAdapter(this, cursor);
         stapelListView.setAdapter(adapter);
     }
 
@@ -94,6 +105,50 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
             case "orange":  setHeaderView.setTextColor(Color.parseColor("#ffc98f")); break;
             case "blue":  setHeaderView.setTextColor(Color.parseColor("#6ef8fa")); break;
         }
+    }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        // Inflater für das Kontextmenü erstellen
+        getMenuInflater().inflate(R.menu.context_menu, menu);
+    }
+
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int selectedItemPosition = info.position;
+        if(item.getItemId() == R.id.edit) {
+            return true;
+        } else if (item.getItemId() == R.id.delete) {
+            // Zeige eine Bestätigungsdialogbox an
+            showDeleteConfirmationDialog(selectedItemPosition);
+            return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    // Methode zur Anzeige der Bestätigungsdialogbox
+    private void showDeleteConfirmationDialog(int itemPosition) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Löschen bestätigen");
+        builder.setMessage("Bist du sicher, dass du das Element löschen möchtest?");
+        builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                DatenBankManager db = new DatenBankManager(SetUebersichtActivity.this);
+                db.deleteStapel((int) adapter.getItemId(itemPosition), setID); // + 1, da ListView ab 0 zählt
+                Cursor cursor = db.getAllStapelFromSetID(setID);
+                adapter = new SetUebersichtCursorAdapter(SetUebersichtActivity.this, cursor);
+                stapelListView.setAdapter(adapter);
+            }
+        });
+        builder.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Hier kannst du Aktionen ausführen, wenn der Benutzer "Nein" auswählt
+            }
+        });
+        builder.show();
     }
 
     @Override
