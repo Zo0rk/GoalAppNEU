@@ -117,11 +117,45 @@ public class DatenBankManager extends SQLiteOpenHelper {
         db.close();
     }
 
-    public int getStapelStatus(int stapelID){
+    public int getStapelStatus(int stapelID, int setID){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT SUM(KARTE_STATUS) FROM KARTE",null);
+        Cursor cursor = db.rawQuery("SELECT SUM(KARTE_STATUS) FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID,null);
         cursor.moveToFirst();
-        return cursor.getInt(0);
+        int summeAll = cursor.getInt(0);
+
+        cursor = db.rawQuery("SELECT SUM(KARTE_STATUS) FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID + " AND KARTE_STATUS = 3",null);
+        cursor.moveToFirst();
+        int summeStatus3 = cursor.getInt(0);
+
+        if(summeAll == 0){  // verhindert, dass durch 0 geteilt wird.
+            return 0;
+        }
+        int ret = (summeStatus3 / summeAll) * 100;  // Berechnet den prozentualen Wert...
+
+        if(ret < 0){
+            ret = 0;
+        }
+        if(ret > 100){
+            ret = 100;
+        }
+
+        return ret;
+    }
+
+    public int getAnzKartenInStapel(int stapelID, int setID) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT SUM(KARTE_STATUS) FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID, null);
+        cursor.moveToFirst();
+        int summeAll = cursor.getInt(0);
+        return summeAll;
+    }
+
+    public int getAnzSichereKartenInStapel(int stapelID, int setID) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT SUM(KARTE_STATUS) FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID + " AND KARTE_STATUS = 3",null);
+        cursor.moveToFirst();
+        int summeStatus3 = cursor.getInt(0);
+        return summeStatus3;
     }
 
 //    public int getMaxStapelID(){
@@ -152,7 +186,6 @@ public class DatenBankManager extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT STAPEL_NAME FROM STAPEL WHERE STAPEL_ID = " + stapelID + " AND " + "SET_ID = " + setID,null);
         cursor.moveToFirst();
         String name = cursor.getString(0);
-        Log.d("DB_TEST---------------------------",name);
         return name;
     }
     // SET-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
