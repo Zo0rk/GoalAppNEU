@@ -13,6 +13,9 @@
         android:theme="@style/Theme.GoalApp"
         tools:targetApi="34">
         <activity
+            android:name=".activities.Lernen"
+            android:exported="false" />
+        <activity
             android:name=".activities.Stapel_erstellen"
             android:exported="false" />
         <activity
