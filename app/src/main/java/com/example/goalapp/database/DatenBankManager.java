@@ -23,8 +23,8 @@ public class DatenBankManager extends SQLiteOpenHelper {
                         "SET_NAME" + " TEXT," +
                         "SET_BESCHREIBUNG" + " TEXT," +
                         "SET_FARBE" + " TEXT," +
-                        "SET_STATUS" + " INTEGER"
-                        + ")"
+                        "SET_STATUS" + " INTEGER" +
+                         ")"
         );
         db.execSQL(
                 "CREATE TABLE " + "STAPEL" + " (" +
@@ -158,6 +158,22 @@ public class DatenBankManager extends SQLiteOpenHelper {
         return summeStatus3;
     }
 
+    public void deleteStapel(int stapelID, int setID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Definiere die WHERE-Bedingung für das Löschen des Stapels
+        String whereClause = "STAPEL_ID = ? AND SET_ID = ?";
+        String[] whereArgs = {String.valueOf(stapelID), String.valueOf(setID)};
+
+        // Lösche den Stapel aus der Tabelle "STAPEL"
+        db.delete("STAPEL", whereClause, whereArgs);
+
+        // Optional: Du kannst auch Karten im Stapel löschen, falls benötigt
+        // Zum Beispiel:
+        // db.delete("KARTE", "STAPEL_ID = ? AND SET_ID = ?", whereArgs);
+
+        db.close();
+    }
 //    public int getMaxStapelID(){
 //        SQLiteDatabase db = this.getWritableDatabase();
 //        Cursor maxID = db.rawQuery("SELECT MAX(STAPEL_ID) FROM STAPEL",null);
@@ -191,10 +207,10 @@ public class DatenBankManager extends SQLiteOpenHelper {
     // SET-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
     public void insertSet(String name,String beschreibung, String farbe, int setStatus){
         ContentValues neueZeile = new ContentValues();
-        neueZeile.put("SET_NAME",name);
-        neueZeile.put("SET_BESCHREIBUNG",beschreibung);
-        neueZeile.put("SET_FARBE",farbe);
-        neueZeile.put("SET_STATUS",setStatus);
+        neueZeile.put("SET_NAME", name);
+        neueZeile.put("SET_BESCHREIBUNG", beschreibung);
+        neueZeile.put("SET_FARBE", farbe);
+        neueZeile.put("SET_STATUS", setStatus);
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert("STAPELSET", null, neueZeile);
     }
@@ -253,10 +269,17 @@ public class DatenBankManager extends SQLiteOpenHelper {
         return setProgress;
     }
 
+    public void deleteSetWithID(int setID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Lösche das Set und verknüpfte Stapel und Karten mithilfe der CASCADE-Option
+        db.delete("STAPELSET", "SET_ID = ?", new String[]{String.valueOf(setID)});
+
+        db.close();
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
-
-
 }
