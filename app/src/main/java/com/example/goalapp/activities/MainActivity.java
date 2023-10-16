@@ -65,9 +65,7 @@ public class MainActivity extends AppCompatActivity  {
         Cursor cursor = db.getAllSets();
         adapter = new MainUebersichtCursorAdapter(this, cursor);
         listView.setAdapter(adapter);
-
     }
-
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);

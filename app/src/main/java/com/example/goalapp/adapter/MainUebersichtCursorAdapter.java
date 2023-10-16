@@ -33,7 +33,6 @@ public class MainUebersichtCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         //Retrieve Data from cursor
-        int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
         String setName = cursor.getString(cursor.getColumnIndexOrThrow("SET_NAME"));
         String setFarbe = cursor.getString(cursor.getColumnIndexOrThrow("SET_FARBE"));
         String setStatus = cursor.getString(cursor.getColumnIndexOrThrow("SET_STATUS"));
