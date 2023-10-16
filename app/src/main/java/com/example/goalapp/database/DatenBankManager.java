@@ -1,11 +1,16 @@
 package com.example.goalapp.database;
 
+import static java.lang.String.valueOf;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+
+import com.example.goalapp.activities.KartenVerwaltung;
+
+import java.util.ArrayList;
 
 public class DatenBankManager extends SQLiteOpenHelper {
 
@@ -53,11 +58,28 @@ public class DatenBankManager extends SQLiteOpenHelper {
 
     }
     // KARTE-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
+    public ArrayList<String> waehleKarten(int stapelID, int setID, int stufe){
+        ArrayList<String> ret = new ArrayList<String>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT KARTE_ID FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID + " AND KARTE_STATUS = " + stufe,null);
+
+        if(!cursor.isNull(0)) {     // Wenn der Cursor nicht leer ist, fahre fort...
+            int iterator = 0;
+            while (cursor.moveToNext()) {      // Solange der Cursor weiterziehen kann, fahre fort...
+
+                ret.add(valueOf(cursor.getInt(iterator++)));
+
+            }
+        }
+        return ret;
+    }
+
     public void insertKarte(String frage, String antwort ,int stapelId ,int setId ,int status) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Abfrage, um den höchsten Wert von KARTE_ID für die gegebene SET_ID und STAPEL_ID zu ermitteln
-        Cursor cursor = db.rawQuery("SELECT MAX(KARTE_ID) FROM KARTE WHERE SET_ID = ? AND STAPEL_ID = ?", new String[]{String.valueOf(setId), String.valueOf(stapelId)});
+        Cursor cursor = db.rawQuery("SELECT MAX(KARTE_ID) FROM KARTE WHERE SET_ID = ? AND STAPEL_ID = ?", new String[]{valueOf(setId), valueOf(stapelId)});
         int neueKarteID = 1; // Standardwert, wenn noch keine Karten für diese Kombination von SET_ID und STAPEL_ID existieren
 
         if (cursor.moveToFirst()) {
@@ -97,7 +119,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Abfrage, um den höchsten Wert von STAPEL_ID für die gegebene SET_ID zu ermitteln
-        Cursor cursor = db.rawQuery("SELECT MAX(STAPEL_ID) FROM STAPEL WHERE SET_ID = ?", new String[]{String.valueOf(setID)});
+        Cursor cursor = db.rawQuery("SELECT MAX(STAPEL_ID) FROM STAPEL WHERE SET_ID = ?", new String[]{valueOf(setID)});
         int neueStapelID = 1; // Standardwert für den Fall, dass noch keine Stapel für dieses Set existieren
 
         if (cursor.moveToFirst()) {
@@ -163,7 +185,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
 
         // Definiere die WHERE-Bedingung für das Löschen des Stapels
         String whereClause = "STAPEL_ID = ? AND SET_ID = ?";
-        String[] whereArgs = {String.valueOf(stapelID), String.valueOf(setID)};
+        String[] whereArgs = {valueOf(stapelID), valueOf(setID)};
 
         // Lösche den Stapel aus der Tabelle "STAPEL"
         db.delete("STAPEL", whereClause, whereArgs);
@@ -273,7 +295,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Lösche das Set und verknüpfte Stapel und Karten mithilfe der CASCADE-Option
-        db.delete("STAPELSET", "SET_ID = ?", new String[]{String.valueOf(setID)});
+        db.delete("STAPELSET", "SET_ID = ?", new String[]{valueOf(setID)});
 
         db.close();
     }

@@ -54,10 +54,7 @@ public class Lernen extends AppCompatActivity implements View.OnClickListener{
 
         // Hier wird die karte per Zufallsalgorithmus gewählt......................................................................
 
-        int randomStufe;     // Wählt die Stufe aus 1 = Schwer, 3 = Sicher -> 1 und 2 werden wahrscheinlicher sein.
-        int randomEintrag;  // Wählt einen zufälligen Eintrag aus der gewählten Stufe.
 
-        randomStufe = bestimmeRandomStufe();
 
         // Hier wird die Ansicht der ausgewählten karte aufgebaut..................................................................
 
@@ -68,12 +65,6 @@ public class Lernen extends AppCompatActivity implements View.OnClickListener{
 
 
 
-    }
-
-    public int bestimmeRandomStufe(){
-        int[] array = {1,1,1,2,2,3};
-        int auswahl = (int) ((Math.random() * (6 - 1)) + 1);
-        return array[auswahl];
     }
 
     public int bestimmeRandomEintrag(){
