@@ -112,7 +112,19 @@ public class DatenBankManager extends SQLiteOpenHelper {
             }
             cursor.close();
         }
+        db.close();
         return kartenAnzahl;
+    }
+
+    public Cursor getAllKarten(int setId, int stapelId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT KARTE_ID as _id, KARTE_FRAGE, KARTE_ANTWORT FROM KARTE " +
+                "WHERE SET_ID = ? AND STAPEL_ID = ?";
+        String[] selectionArgs = {String.valueOf(setId), String.valueOf(stapelId)};
+        Cursor cursor = db.rawQuery(query,selectionArgs);
+        if(cursor != null)
+            cursor.moveToFirst();
+        return cursor;
     }
     // STAPEL-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
     public void insertStapel(String stapelName, String stapelBeschreibung, String stapelFarbe, int stapelStatus, int setID){
@@ -304,4 +316,6 @@ public class DatenBankManager extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
+
 }

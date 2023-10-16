@@ -36,11 +36,13 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
     private String setFarbe;
     private ProgressBar mainProgressBar;
     private int mainProgress;
-    int setID; //Dazu da, um die Stapel mit gleicher ID in das Set zu laden...
+
     ListView stapelListView;
     private FloatingActionButton neu;
 
     SetUebersichtCursorAdapter adapter;
+    int setID;
+    private int stapelID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,7 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
 
             // CODE HINZUFÜGEN ZUM ERSTELLEN ODER SPIELEN....
             Intent intent = new Intent(this, Lernen.class);
-            int stapelID = (int) adapter.getItemId(i);
+            stapelID = (int) adapter.getItemId(i);
             intent.putExtra("STAPEL_ID", stapelID);
             intent.putExtra("SET_ID", setID);
             startActivity(intent);
@@ -115,17 +117,27 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
         super.onCreateContextMenu(menu, v, menuInfo);
 
         // Inflater für das Kontextmenü erstellen
-        getMenuInflater().inflate(R.menu.context_menu, menu);
+        getMenuInflater().inflate(R.menu.stapel_menu, menu);
     }
 
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int selectedItemPosition = info.position;
-        if(item.getItemId() == R.id.edit) {
+        stapelID = (int) adapter.getItemId(info.position);
+        if(item.getItemId() == R.id.newCard) {
+            Intent intent = new Intent(this, KarteErstellenActivity.class);
+            intent.putExtra("STAPEL_ID", stapelID);
+            intent.putExtra("SET_ID", setID);
+            startActivity(intent);
             return true;
+        } else if (item.getItemId() == R.id.showCards) {
+            Intent intent = new Intent(this, KartenUebersichtActivity.class);
+            intent.putExtra("STAPEL_ID", stapelID);
+            intent.putExtra("SET_ID", setID);
+            startActivity(intent);
+
         } else if (item.getItemId() == R.id.delete) {
             // Zeige eine Bestätigungsdialogbox an
-            showDeleteConfirmationDialog(selectedItemPosition);
+            showDeleteConfirmationDialog(info.position);
             return true;
         }
         return super.onContextItemSelected(item);
