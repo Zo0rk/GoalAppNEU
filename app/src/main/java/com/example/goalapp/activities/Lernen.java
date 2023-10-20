@@ -2,8 +2,11 @@ package com.example.goalapp.activities;
 
 import static java.lang.String.valueOf;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -32,6 +35,8 @@ public class Lernen extends AppCompatActivity implements View.OnClickListener{
     private int setID;
     private Intent i;
 
+    private int randomKartenID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +46,7 @@ public class Lernen extends AppCompatActivity implements View.OnClickListener{
         i = getIntent();
         stapelID = i.getIntExtra("STAPEL_ID",0);
         setID = i.getIntExtra("SET_ID",0);
+        KartenVerwaltung kv = new KartenVerwaltung(stapelID,setID,this);
 
         stapelName = findViewById(R.id.lernenKapitel);
         progressBar = findViewById(R.id.mainProgressBar);
@@ -52,27 +58,65 @@ public class Lernen extends AppCompatActivity implements View.OnClickListener{
         mittel = findViewById(R.id.mittel);
         sicher = findViewById(R.id.sicher);
 
+        unsicher.setVisibility(View.INVISIBLE);
+        mittel.setVisibility(View.INVISIBLE);
+        sicher.setVisibility(View.INVISIBLE);
+
+        antwortAnzeigen.setOnClickListener(this);
+        unsicher.setOnClickListener(this);
+        mittel.setOnClickListener(this);
+        sicher.setOnClickListener(this);
+
         // Hier wird die karte per Zufallsalgorithmus gewählt......................................................................
 
-
+        randomKartenID = kv.getRandomKartenID();
 
         // Hier wird die Ansicht der ausgewählten karte aufgebaut..................................................................
 
         stapelName.setText(db.getStapelName(stapelID,setID).toString()); // StapelName Methode erstellen....
-        progressBar.setProgress(db.getStapelStatus(stapelID,setID),true);
+        progressBar.setProgress(db.getStapelStatus(stapelID,setID));
         progressText.setText(" ~ " + valueOf(db.getStapelStatus(stapelID,setID))+"%");
-        status.setText("< " + valueOf(db.getAnzSichereKartenInStapel(stapelID,setID)) + " Sicher beantwortet >");
-
+        status.setText("< " + valueOf(db.getAnzSichereKartenInStapel(stapelID,setID)) + " / " + db.getAnzKartenInStapel(stapelID,setID) + " Sicher beantwortet >");
+        frage.setText(db.getFrage(setID,stapelID, randomKartenID));
 
 
     }
 
-    public int bestimmeRandomEintrag(){
-        return 0;
+    private void zeigeAntwort(int kartenID){
+        Dialog antw = new Dialog(this);
+        antw.setContentView(R.layout.antwort_popup); // Das Layout für das Popup-Fenster setzen
+
+        // Hier können Sie auf die Views im Popup-Fenster zugreifen und deren Inhalt festlegen
+        TextView antwortText = antw.findViewById(R.id.antwortText);
+        // Hier können Sie den Text oder Inhalt ändern, basierend auf der KartenID oder anderen Informationen
+        antwortText.setText(db.getAntwort(setID,stapelID,kartenID));
+
+        antw.show(); // Das Popup-Fenster anzeigen
+        unsicher.setVisibility(View.VISIBLE);
+        mittel.setVisibility(View.VISIBLE);
+        sicher.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onClick(View v) {
-
+        if(v == antwortAnzeigen){
+            zeigeAntwort(randomKartenID);
+        }
+        if(v == unsicher){
+            db.setStatus(setID,stapelID,randomKartenID,1);
+            progressBar.setProgress(db.getStapelStatus(stapelID,setID),true);
+            progressBar.setBackgroundColor(1);
+            this.recreate();
+        }
+        if(v == mittel){
+            db.setStatus(setID,stapelID,randomKartenID,2);
+            progressBar.setProgress(db.getStapelStatus(stapelID,setID),true);
+            this.recreate();
+        }
+        if(v == sicher){
+            db.setStatus(setID,stapelID,randomKartenID,3);
+            progressBar.setProgress(db.getStapelStatus(stapelID,setID),true);
+            this.recreate();
+        }
     }
 }

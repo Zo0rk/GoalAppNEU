@@ -7,8 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.example.goalapp.activities.KartenVerwaltung;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -58,19 +57,47 @@ public class DatenBankManager extends SQLiteOpenHelper {
 
     }
     // KARTE-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
-    public ArrayList<String> waehleKarten(int stapelID, int setID, int stufe){
-        ArrayList<String> ret = new ArrayList<String>();
+    public ArrayList<Integer> waehleKarten_1(int stapelID, int setID){
+        ArrayList<Integer> ret = new ArrayList<Integer>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT KARTE_ID FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID + " AND KARTE_STATUS = " + stufe,null);
+        Cursor cursor = db.rawQuery("SELECT KARTE_ID FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID + " AND KARTE_STATUS = 1",null);
 
-        if(!cursor.isNull(0)) {     // Wenn der Cursor nicht leer ist, fahre fort...
-            int iterator = 0;
-            while (cursor.moveToNext()) {      // Solange der Cursor weiterziehen kann, fahre fort...
+        if(cursor.moveToFirst()){ // Wenn der Cursor nicht leer ist, also karten dieser Stufe vorhanden sind...
+            do{
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("KARTE_ID"));
+                ret.add(id);
+            }while(cursor.moveToNext());
+        }
+        return ret;
+    }
 
-                ret.add(valueOf(cursor.getInt(iterator++)));
+    public ArrayList<Integer> waehleKarten_2(int stapelID, int setID){
+        ArrayList<Integer> ret = new ArrayList<Integer>();
 
-            }
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT KARTE_ID FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID + " AND KARTE_STATUS = 2",null);
+
+        if(cursor.moveToFirst()){ // Wenn der Cursor nicht leer ist, also karten dieser Stufe vorhanden sind...
+            do{
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("KARTE_ID"));
+                ret.add(id);
+            }while(cursor.moveToNext());
+        }
+        return ret;
+    }
+
+    public ArrayList<Integer> waehleKarten_3(int stapelID, int setID){
+        ArrayList<Integer> ret = new ArrayList<Integer>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT KARTE_ID FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID + " AND KARTE_STATUS = 3",null);
+
+        if(cursor.moveToFirst()){ // Wenn der Cursor nicht leer ist, also karten dieser Stufe vorhanden sind...
+            do{
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("KARTE_ID"));
+                ret.add(id);
+            }while(cursor.moveToNext());
         }
         return ret;
     }
@@ -126,6 +153,45 @@ public class DatenBankManager extends SQLiteOpenHelper {
             cursor.moveToFirst();
         return cursor;
     }
+
+    public String getFrage(int setID, int stapelID, int kartenID){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT KARTE_FRAGE FROM KARTE WHERE SET_ID = " + setID + " AND STAPEL_ID = " + stapelID + " AND KARTE_ID = " + kartenID,null);
+        cursor.moveToFirst();
+        return cursor.getString(cursor.getColumnIndexOrThrow("KARTE_FRAGE"));
+    }
+
+    public String getAntwort(int setID, int stapelID, int kartenID){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT KARTE_ANTWORT FROM KARTE WHERE SET_ID = " + setID + " AND STAPEL_ID = " + stapelID + " AND KARTE_ID = " + kartenID,null);
+        cursor.moveToFirst();
+        return cursor.getString(cursor.getColumnIndexOrThrow("KARTE_ANTWORT"));
+    }
+
+    /*public void setStatus(int setID, int stapelID, int kartenID, int status){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("UPDATE KARTE SET KARTE_STATUS = " + status + " WHERE SET_ID = " + setID + " AND STAPEL_ID = " + stapelID + " AND KARTE_ID = " + kartenID,null);
+        Log.d("DB","OK");
+    }*/
+
+    public void setStatus(int setID, int stapelID, int kartenID, int status){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("KARTE_STATUS", status);
+
+        String whereClause = "SET_ID = ? AND STAPEL_ID = ? AND KARTE_ID = ?";
+        String[] whereArgs = {String.valueOf(setID), String.valueOf(stapelID), String.valueOf(kartenID)};
+
+        int rowsAffected = db.update("KARTE", values, whereClause, whereArgs);
+
+        if (rowsAffected > 0) {
+            Log.d("DB", "Status der Karte erfolgreich aktualisiert");
+        } else {
+            Log.e("DB", "Fehler beim Aktualisieren des Kartenstatus");
+        }
+
+        db.close();
+    }
     // STAPEL-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
     public void insertStapel(String stapelName, String stapelBeschreibung, String stapelFarbe, int stapelStatus, int setID){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -153,32 +219,38 @@ public class DatenBankManager extends SQLiteOpenHelper {
 
     public int getStapelStatus(int stapelID, int setID){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT SUM(KARTE_STATUS) FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID,null);
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID,null);
         cursor.moveToFirst();
-        int summeAll = cursor.getInt(0);
+        float summeAll = cursor.getInt(0);
+        Log.d("COUNT*",valueOf(summeAll));
 
-        cursor = db.rawQuery("SELECT SUM(KARTE_STATUS) FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID + " AND KARTE_STATUS = 3",null);
+        cursor = db.rawQuery("SELECT COUNT(KARTE_STATUS) FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID + " AND KARTE_STATUS = 3",null);
         cursor.moveToFirst();
-        int summeStatus3 = cursor.getInt(0);
+        float summeStatus3 = cursor.getInt(0);
+        Log.d("COUNT3",valueOf(summeStatus3));
 
         if(summeAll == 0){  // verhindert, dass durch 0 geteilt wird.
             return 0;
         }
-        int ret = (summeStatus3 / summeAll) * 100;  // Berechnet den prozentualen Wert...
-
+        float ret = (summeStatus3 / summeAll) * 100;  // Berechnet den prozentualen Wert...
+        Log.d("RET",valueOf(ret));
         if(ret < 0){
             ret = 0;
         }
         if(ret > 100){
             ret = 100;
         }
-
-        return ret;
+        Log.d("RET",valueOf(ret));
+        int i;
+        i = (int) ret;
+        return i;
     }
 
     public int getAnzKartenInStapel(int stapelID, int setID) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT SUM(KARTE_STATUS) FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID, null);
+        Log.d("STAPEL_ID",valueOf(stapelID));
+        Log.d("SET_ID",valueOf(setID));
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID, null);
         cursor.moveToFirst();
         int summeAll = cursor.getInt(0);
         return summeAll;
@@ -186,7 +258,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
 
     public int getAnzSichereKartenInStapel(int stapelID, int setID) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT SUM(KARTE_STATUS) FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID + " AND KARTE_STATUS = 3",null);
+        Cursor cursor = db.rawQuery("SELECT COUNT(KARTE_STATUS) FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID + " AND KARTE_STATUS = 3",null);
         cursor.moveToFirst();
         int summeStatus3 = cursor.getInt(0);
         return summeStatus3;

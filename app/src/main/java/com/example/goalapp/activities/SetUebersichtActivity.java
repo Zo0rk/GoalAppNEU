@@ -59,6 +59,7 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
         neu = findViewById(R.id.addButton);
 
         setID = getIntent().getIntExtra("SET_ID", 0);
+        stapelID = getIntent().getIntExtra("STAPEL_ID",0); // siehe z. 87...
         buildUpFromDB(setID);
 
         // Erstellt einen neuen Stapel im Set mit entsprechender set-id
@@ -71,9 +72,20 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
         // Öffnet zur Zeit Kartenerstellung Activity
         stapelListView.setOnItemClickListener((adapterView, view, i, l) -> {
 
-            // CODE HINZUFÜGEN ZUM ERSTELLEN ODER SPIELEN....
-            Intent intent = new Intent(this, Lernen.class);
             stapelID = (int) adapter.getItemId(i);
+
+            DatenBankManager db = new DatenBankManager(this);
+            int anzKarten = db.getAnzKartenInStapel(stapelID,setID);
+            Intent intent;
+
+            if(anzKarten != 0) {
+                intent = new Intent(this, Lernen.class);
+            }
+            else{
+                Log.d("anzKarten",valueOf(anzKarten));
+                intent = new Intent(this, KarteErstellenActivity.class);
+            }
+
             intent.putExtra("STAPEL_ID", stapelID);
             intent.putExtra("SET_ID", setID);
             startActivity(intent);
