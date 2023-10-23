@@ -1,7 +1,10 @@
 package com.example.goalapp.adapter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +17,7 @@ import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 
 import com.example.goalapp.R;
+import com.example.goalapp.database.DatenBankManager;
 
 import java.util.Map;
 
@@ -34,6 +38,9 @@ public class MainUebersichtCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         //Retrieve Data from cursor
+        DatenBankManager db = new DatenBankManager(context);
+
+
         String setName = cursor.getString(cursor.getColumnIndexOrThrow("SET_NAME"));
         String setFarbe = cursor.getString(cursor.getColumnIndexOrThrow("SET_FARBE"));
         String setStatus = cursor.getString(cursor.getColumnIndexOrThrow("SET_STATUS"));
@@ -47,6 +54,9 @@ public class MainUebersichtCursorAdapter extends CursorAdapter {
         int colorRes = context.getResources().getIdentifier(setFarbe, "color", context.getPackageName());
         int textColor = ContextCompat.getColor(context, colorRes);
         nameTextView.setTextColor(textColor);
+
+        setProgressBar.setProgress(Integer.parseInt(setStatus));
+        setProgressBar.setProgressTintList(ColorStateList.valueOf(textColor));
     }
 
     @Override

@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.goalapp.R;
 import com.example.goalapp.adapter.MainUebersichtCursorAdapter;
@@ -117,14 +118,17 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
         //setBeschreibungView.setText(setBeschreibung); IST JETZT FORTSCHRITT...
 
 
-        switch(setFarbe){
-            case "red":  setHeaderView.setTextColor(Color.parseColor("#ff756b")); break;
-            case "green":  setHeaderView.setTextColor(Color.parseColor("#7afa6e")); break;
-            case "yellow":  setHeaderView.setTextColor(Color.parseColor("#fff86b")); break;
-            case "purple":  setHeaderView.setTextColor(Color.parseColor("#fa6ef8")); break;
-            case "orange":  setHeaderView.setTextColor(Color.parseColor("#ffc98f")); break;
-            case "blue":  setHeaderView.setTextColor(Color.parseColor("#6ef8fa")); break;
-        }
+//        switch(setFarbe){
+//            case "red":  setHeaderView.setTextColor(Color.parseColor("#ff756b")); break;
+//            case "green":  setHeaderView.setTextColor(Color.parseColor("#7afa6e")); break;
+//            case "yellow":  setHeaderView.setTextColor(Color.parseColor("#fff86b")); break;
+//            case "purple":  setHeaderView.setTextColor(Color.parseColor("#fa6ef8")); break;
+//            case "orange":  setHeaderView.setTextColor(Color.parseColor("#ffc98f")); break;
+//            case "blue":  setHeaderView.setTextColor(Color.parseColor("#6ef8fa")); break;
+//        }
+        int colorRes = getResources().getIdentifier(setFarbe, "color", getPackageName());
+        int textColor = ContextCompat.getColor(this, colorRes);
+        setHeaderView.setTextColor(textColor);
     }
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {

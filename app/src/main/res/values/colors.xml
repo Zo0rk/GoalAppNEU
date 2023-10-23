@@ -3,6 +3,11 @@
     <color name="black">#FF000000</color>
     <color name="midnight">#171a1c</color>
     <color name="midnight_light">#23272f</color>
+    <color name="darkmode1">#1a1a1a</color>
+    <color name="darkmode2">#202020</color>
+    <color name="darkmode3">#262626</color>
+    <color name="darkmode4">#2c2c2c</color>
+    <color name="darkmode5">#333333</color>
     <color name="darkgrey">#292929</color>
     <color name="lightgrey">#ada8a8</color>
     <color name="white">#FFFFFFFF</color>

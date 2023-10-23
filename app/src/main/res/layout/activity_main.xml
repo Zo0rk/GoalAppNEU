@@ -9,7 +9,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/midnight"
+            android:background="@color/darkmode1"
             android:orientation="vertical">
 
             <TextView
@@ -48,11 +48,10 @@
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="30dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="20dp"
                 android:layout_marginBottom="10dp"
                 android:clickable="true"
                 android:src="@drawable/baseline_add_circle_outline_24"
-                app:backgroundTint="@color/midnight_light"
+                app:backgroundTint="@color/darkmode4"
                 app:borderWidth="0dp"
                 app:tint="@color/white" />
 

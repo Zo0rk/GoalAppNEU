@@ -17,7 +17,6 @@ public class KartenUebersichtActivity extends AppCompatActivity {
     ListView listView;
     KartenUebersichtCursorAdapter adapter;
     DatenBankManager db;
-
     int setID, stapelID;
 
     @Override

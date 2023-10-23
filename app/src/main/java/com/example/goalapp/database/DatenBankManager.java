@@ -143,6 +143,10 @@ public class DatenBankManager extends SQLiteOpenHelper {
         return kartenAnzahl;
     }
 
+    public int countKartenInSet(String setId) {
+        return 0;
+    }
+
     public Cursor getAllKarten(int setId, int stapelId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT KARTE_ID as _id, KARTE_FRAGE, KARTE_ANTWORT FROM KARTE " +
