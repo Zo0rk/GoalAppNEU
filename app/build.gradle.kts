@@ -48,7 +48,7 @@ dependencies {
 
 dependencies {
 
-    // Fix Duplicate class
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")// Fix Duplicate class
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 
 }

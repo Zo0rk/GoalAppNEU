@@ -101,19 +101,21 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
         Cursor cursor = db.getAllStapelFromSetID(setID);
         adapter = new SetUebersichtCursorAdapter(this, cursor);
         stapelListView.setAdapter(adapter);
+        buildUpFromDB(setID);
     }
 
     private void buildUpFromDB(int id){
         DatenBankManager db = new DatenBankManager(this);
+        db.setSetProgress(id);
         setHeader = db.getSetName(id);
         setBeschreibung = db.getSetBeschreibung(id);
         setFarbe = db.getSetFarbe(id);
         setHeaderView.setText(setHeader);
         progress = db.getSetProgress(id);
-        progress = 20;
         progressView.setText(valueOf(progress) + "%");
         mainProgressBar.setProgress(progress,true);
         //setBeschreibungView.setText(setBeschreibung); IST JETZT FORTSCHRITT...
+
 
         switch(setFarbe){
             case "red":  setHeaderView.setTextColor(Color.parseColor("#ff756b")); break;

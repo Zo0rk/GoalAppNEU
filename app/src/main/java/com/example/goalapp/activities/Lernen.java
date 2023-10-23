@@ -119,4 +119,14 @@ public class Lernen extends AppCompatActivity implements View.OnClickListener{
             this.recreate();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.d("BACK","BACK");
+        db.getStapelStatus(stapelID,setID); // Damit beim zurückkehrern auch wieder die Progressbar stimmt...
+        db.setSetProgress(setID);
+        Log.d("SET------",valueOf(setID));
+    }
+
 }

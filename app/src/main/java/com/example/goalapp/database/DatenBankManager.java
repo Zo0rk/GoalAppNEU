@@ -170,7 +170,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
 
     /*public void setStatus(int setID, int stapelID, int kartenID, int status){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("UPDATE KARTE SET KARTE_STATUS = " + status + " WHERE SET_ID = " + setID + " AND STAPEL_ID = " + stapelID + " AND KARTE_ID = " + kartenID,null);
+        Cursor cursor = db.rawQuery(" KARTE SET KARTE_STATUS = " + status + " WHERE SET_ID = " + setID + " AND STAPEL_ID = " + stapelID + " AND KARTE_ID = " + kartenID,null);
         Log.d("DB","OK");
     }*/
 
@@ -243,6 +243,10 @@ public class DatenBankManager extends SQLiteOpenHelper {
         Log.d("RET",valueOf(ret));
         int i;
         i = (int) ret;
+
+        String updateQuery = "UPDATE STAPEL SET STAPEL_STATUS = " + i + " WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID;
+        db.execSQL(updateQuery);
+
         return i;
     }
 
@@ -370,9 +374,39 @@ public class DatenBankManager extends SQLiteOpenHelper {
     public int getSetProgress(int id){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor progress = db.rawQuery("SELECT SET_STATUS FROM STAPELSET WHERE SET_ID =" + id,null);
+        Log.d("JETZT:",valueOf(id));
         progress.moveToFirst();
         int setProgress = progress.getInt(0);
+        Log.d("PROGRESS:",valueOf(setProgress));
         return setProgress;
+    }
+
+    public void setSetProgress(int setID){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM STAPEL WHERE SET_ID = " + setID,null);
+        cursor.moveToFirst();
+        float summeAll = cursor.getInt(0);
+        Log.d("summeAll:",valueOf(summeAll));
+        cursor = db.rawQuery("SELECT COUNT(*) FROM STAPEL WHERE SET_ID = " + setID + " AND STAPEL_STATUS = 100",null);
+        cursor.moveToFirst();
+        float summeStatus3 = cursor.getInt(0);
+        Log.d("setID",valueOf(setID));
+        Log.d("summeStatus3:",valueOf(summeStatus3));
+        if(summeAll == 0){  // verhindert, dass durch 0 geteilt wird.
+            String query = "UPDATE STAPELSET SET SET_STATUS = 0 WHERE SET_ID = " + valueOf(setID);
+        }
+        float ret = (summeStatus3 / summeAll) * 100;  // Berechnet den prozentualen Wert...
+        if(ret < 0){
+            ret = 0;
+        }
+        if(ret > 100){
+            ret = 100;
+        }
+        Log.d("RET",valueOf(ret));
+        int i;
+        i = (int) ret;
+        String query = "UPDATE STAPELSET SET SET_STATUS = " + valueOf(i) + " WHERE SET_ID = " + valueOf(setID);
+        db.execSQL(query);
     }
 
     public void deleteSetWithID(int setID) {

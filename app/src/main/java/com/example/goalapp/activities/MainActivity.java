@@ -1,10 +1,13 @@
 package com.example.goalapp.activities;
 
+import static java.lang.String.valueOf;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity  {
             Intent intent = new Intent(this, SetErzeugen.class);
             startActivity(intent);
         });
+        Log.d("DB-CHECK-----",valueOf(db.getSetProgress(3)));
 
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
             //Rufe SetUebersichtActivity auf

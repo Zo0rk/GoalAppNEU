@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 
 import com.example.goalapp.R;
@@ -36,5 +37,11 @@ public class KartenUebersichtActivity extends AppCompatActivity {
         Cursor cursor = db.getAllKarten(setID, stapelID);
         adapter = new KartenUebersichtCursorAdapter(this, cursor);
         listView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.d("BACK","BACK");
     }
 }

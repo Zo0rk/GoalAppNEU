@@ -13,6 +13,7 @@
 
             <TextView
                 android:id="@+id/ANZ_FRAGEN_SICHER_BEANTW"
+                android:layout_marginHorizontal="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="00/00 Fragen sicher beantwortet"
