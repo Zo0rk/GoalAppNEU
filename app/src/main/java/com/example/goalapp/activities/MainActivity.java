@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity  {
             Intent intent = new Intent(this, SetErzeugen.class);
             startActivity(intent);
         });
-        Log.d("DB-CHECK-----",valueOf(db.getSetProgress(3)));
 
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
             //Rufe SetUebersichtActivity auf

@@ -5,6 +5,7 @@ import static java.lang.String.valueOf;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -128,6 +129,8 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
 //        }
         int colorRes = getResources().getIdentifier(setFarbe, "color", getPackageName());
         int textColor = ContextCompat.getColor(this, colorRes);
+
+        mainProgressBar.setProgressTintList(ColorStateList.valueOf(textColor));
         setHeaderView.setTextColor(textColor);
     }
     @Override
