@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:orientation="horizontal"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/midnight_light">
+    android:background="@color/darkmode1">
 
     <TextView
         android:id="@+id/frageID"

@@ -1,5 +1,6 @@
 package com.example.goalapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,8 +16,8 @@ public class KarteErstellenActivity extends AppCompatActivity implements View.On
 
     private String frage;
     private String antwort;
-    private int stapel_id;     // Zu welchem Stapel gehören die karten?
-    private int set_id;
+    private int stapel_id = 9999;     // Zu welchem Stapel gehören die karten?
+    private int set_id = 9999;
     private int status;     // Zu beginn immer 1 -> [1-SCHLECHT] .. [2-MITTEL] .. [3-SICHER]
 
     // DATENBANK......................................
@@ -35,9 +36,8 @@ public class KarteErstellenActivity extends AppCompatActivity implements View.On
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_karte_erstellen);
-
-        stapel_id = getIntent().getIntExtra("STAPEL_ID", 999999); //nicht 0 sonst kommt es evtl in den Falschen Stapel
-        set_id = getIntent().getIntExtra("SET_ID", 99999);
+        stapel_id = getIntent().getIntExtra("STAPEL_ID", 9999); //nicht 0 sonst kommt es evtl in den Falschen Stapel
+        set_id = getIntent().getIntExtra("SET_ID", 9999);
 
         fertig = findViewById(R.id.fertig);
         hinzufuegen = findViewById(R.id.speichern);
@@ -66,7 +66,8 @@ public class KarteErstellenActivity extends AppCompatActivity implements View.On
 
                 antwortEdit.getText().clear();
                 frageEdit.getText().clear();
-
+                startActivity(new Intent(this, KarteErstellenActivity.class)
+                        .putExtra("SET_ID", set_id).putExtra("STAPEL_ID", stapel_id));
                 finish();
             }
         }
