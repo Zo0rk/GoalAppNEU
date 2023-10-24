@@ -45,6 +45,7 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
     SetUebersichtCursorAdapter adapter;
     int setID;
     private int stapelID;
+    private int color;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,9 +88,9 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
                 Log.d("anzKarten",valueOf(anzKarten));
                 intent = new Intent(this, KarteErstellenActivity.class);
             }
-
             intent.putExtra("STAPEL_ID", stapelID);
             intent.putExtra("SET_ID", setID);
+            intent.putExtra("SET_COLOR", color);
             startActivity(intent);
         });
         /*setHeaderView.setText(setHeader);
@@ -128,10 +129,10 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
 //            case "blue":  setHeaderView.setTextColor(Color.parseColor("#6ef8fa")); break;
 //        }
         int colorRes = getResources().getIdentifier(setFarbe, "color", getPackageName());
-        int textColor = ContextCompat.getColor(this, colorRes);
+        color = ContextCompat.getColor(this, colorRes);
 
-        mainProgressBar.setProgressTintList(ColorStateList.valueOf(textColor));
-        setHeaderView.setTextColor(textColor);
+        mainProgressBar.setProgressTintList(ColorStateList.valueOf(color));
+        setHeaderView.setTextColor(color);
     }
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {

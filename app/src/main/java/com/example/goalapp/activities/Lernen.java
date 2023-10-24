@@ -4,6 +4,7 @@ import static java.lang.String.valueOf;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +47,8 @@ public class Lernen extends AppCompatActivity implements View.OnClickListener{
         i = getIntent();
         stapelID = i.getIntExtra("STAPEL_ID",0);
         setID = i.getIntExtra("SET_ID",0);
+        int color = i.getIntExtra("SET_COLOR",0);
+
         KartenVerwaltung kv = new KartenVerwaltung(stapelID,setID,this);
 
         stapelName = findViewById(R.id.lernenKapitel);
@@ -75,6 +78,7 @@ public class Lernen extends AppCompatActivity implements View.OnClickListener{
 
         stapelName.setText(db.getStapelName(stapelID,setID).toString()); // StapelName Methode erstellen....
         progressBar.setProgress(db.getStapelStatus(stapelID,setID));
+        progressBar.setProgressTintList(ColorStateList.valueOf(color));
         progressText.setText(" ~ " + valueOf(db.getStapelStatus(stapelID,setID))+"%");
         status.setText("< " + valueOf(db.getAnzSichereKartenInStapel(stapelID,setID)) + " / " + db.getAnzKartenInStapel(stapelID,setID) + " Sicher beantwortet >");
         frage.setText(db.getFrage(setID,stapelID, randomKartenID));
