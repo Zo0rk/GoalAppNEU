@@ -30,7 +30,7 @@
                 android:layout_height="3dp"
                 android:layout_marginHorizontal="30dp"
                 android:background="?android:attr/listDivider"
-                android:backgroundTint="@color/white" />
+                android:backgroundTint="@color/white"/>
 
             <ListView
                 android:id="@+id/setUebersichtListView"

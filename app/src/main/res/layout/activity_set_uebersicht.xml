@@ -132,8 +132,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="30dp"
-                    android:background="@color/midnight_light"
-                    android:cacheColorHint="@color/white" />
+                    android:cacheColorHint="@color/white"
+                    android:listSelector="@drawable/list_item_selector"/>
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/addButton"
