@@ -9,12 +9,14 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="-264dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/midnight"
+            android:background="@color/darkmode1"
             android:orientation="vertical">
 
             <TextView
@@ -37,9 +39,9 @@
                 android:layout_marginTop="35dp"
                 android:layout_marginBottom="15dp"
                 android:text="NAME:"
-                android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/setErzeugenNameEdit"
@@ -47,10 +49,10 @@
                 android:layout_height="35dp"
                 android:layout_marginHorizontal="35dp"
                 android:layout_marginBottom="15dp"
-                android:background="@color/midnight_light"
+                android:background="@color/darkmode4"
                 android:hint="Namen eingeben..."
-                android:textColorHint="@color/lightgrey"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white"
+                android:textColorHint="@color/lightgrey" />
 
             <TextView
                 android:id="@+id/setErzeugenBeschrHeader"
@@ -60,9 +62,9 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:text="BESCHREIBUNG:"
-                android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
 
             <EditText
@@ -71,11 +73,11 @@
                 android:layout_height="70dp"
                 android:layout_marginHorizontal="35dp"
                 android:layout_marginBottom="15dp"
-                android:background="@color/midnight_light"
-                android:hint="Beschreibung eingeben..."
+                android:background="@color/darkmode4"
                 android:gravity="left"
-                android:textColorHint="@color/lightgrey"
-                android:textColor="@color/white"/>
+                android:hint="Beschreibung eingeben..."
+                android:textColor="@color/white"
+                android:textColorHint="@color/lightgrey" />
 
             <TextView
                 android:id="@+id/setErzeugenFarbeHeader"
@@ -84,9 +86,9 @@
                 android:layout_marginHorizontal="35dp"
                 android:layout_marginTop="15dp"
                 android:text="FARBE WÄHLEN:"
-                android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
             <RadioGroup
                 android:id="@+id/setErzeugenRadioGr"
@@ -95,7 +97,7 @@
                 android:layout_marginHorizontal="35dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
-                android:background="@color/midnight_light">
+                android:background="@color/darkmode2">
 
                 <RadioButton
                     android:id="@+id/setErzeugenRadioRed"
@@ -162,24 +164,25 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
                 android:layout_marginVertical="50dp"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/abbrechen"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
-                    android:text="ABBRECHEN"
-                    android:backgroundTint="@color/lightgrey"
                     android:layout_marginHorizontal="30dp"
+                    android:backgroundTint="@color/darkmode5"
+                    android:text="ABBRECHEN"
                     app:cornerRadius="2dp" />
+
                 <Button
                     android:id="@+id/speichern"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
-                    android:backgroundTint="@color/lightgrey"
                     android:layout_marginHorizontal="30dp"
+                    android:backgroundTint="@color/darkmode5"
                     android:text="SPEICHERN"
                     app:cornerRadius="2dp" />
 
