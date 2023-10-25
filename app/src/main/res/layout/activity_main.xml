@@ -22,7 +22,7 @@
                 android:text="ÜBERSICHT"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="50dp" />
+                android:textSize="35dp" />
 
             <View
                 android:paddingLeft="10dp"
@@ -33,48 +33,54 @@
                 android:layout_marginHorizontal="10dp"
                 android:background="?android:attr/listDivider"
                 android:backgroundTint="@color/white"/>
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="35dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="15dp"
-                android:text="ALLE STAPEL:"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:textSize="30dp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="35dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="15dp"
+                    android:paddingRight="50dp"
+                    android:text="ALLE STAPEL:"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="25dp" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/newButton"
+                    android:layout_width="70dp"
+                    android:layout_height="57dp"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:clickable="true"
+                    android:src="@drawable/baseline_add_circle_outline_24"
+                    app:backgroundTint="@color/darkmode4"
+                    app:borderWidth="0dp"
+                    app:tint="@color/white" />
+            </LinearLayout>
+
+
 
             <ListView
                 android:id="@+id/setUebersichtListView"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
                 android:listSelector="@drawable/list_item_selector"/>
             <View
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:id="@+id/divider3"
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
                 android:layout_marginHorizontal="10dp"
                 android:background="?android:attr/listDivider"
                 android:backgroundTint="@color/white"/>
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/newButton"
-                android:layout_width="70dp"
-                android:layout_height="57dp"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="30dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:clickable="true"
-                android:src="@drawable/baseline_add_circle_outline_24"
-                app:backgroundTint="@color/darkmode4"
-                app:borderWidth="0dp"
-                app:tint="@color/white" />
-
         </LinearLayout>
 
 

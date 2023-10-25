@@ -37,8 +37,6 @@ public class MainActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_main);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
-        db = new DatenBankManager(this);
-
         newButton = findViewById(R.id.newButton);
         listView = findViewById(R.id.setUebersichtListView);
         //Auswahlfeld für löschen und bearbeiten bei längeren drücken
@@ -64,6 +62,7 @@ public class MainActivity extends AppCompatActivity  {
     protected void onResume() {
         super.onResume();
         // Erstelle oder erhalte eine Cursor mit den Daten aus der Datenbank
+        db = new DatenBankManager(this);
         Cursor cursor = db.getAllSets();
         adapter = new MainUebersichtCursorAdapter(this, cursor);
         listView.setAdapter(adapter);

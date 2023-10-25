@@ -3,5 +3,5 @@
     <item android:state_focused="true" android:drawable="@color/darkmode5"></item> <!-- focused -->
     <item android:state_focused="true" android:state_pressed="true" android:drawable="@color/darkmode5"></item> <!-- focused and pressed-->
     <item android:state_pressed="true" android:drawable="@color/darkmode5"></item> <!-- pressed -->
-    <item android:drawable="@color/darkmode1"></item>
+    <item android:drawable="@color/darkmode1"></item> <!-- normal -->
 </selector>

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class DatenBankManager extends SQLiteOpenHelper {
 
-    public static final int DATENBANK_VERSION = 3;
+    public static final int DATENBANK_VERSION = 4;
     public static final String DATENBANK_NAMEN = "Karteikarten.db";
     public DatenBankManager(Context cxt) {
         super(cxt, DATENBANK_NAMEN, null, DATENBANK_VERSION);
@@ -21,14 +21,17 @@ public class DatenBankManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        db.execSQL("PRAGMA foreign_keys=ON;");
+
         db.execSQL(
                 "CREATE TABLE " + "STAPELSET" + " (" +
                         "SET_ID" + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "SET_NAME" + " TEXT," +
                         "SET_BESCHREIBUNG" + " TEXT," +
                         "SET_FARBE" + " TEXT," +
-                        "SET_STATUS" + " INTEGER" +
-                         ")"
+                        "SET_STATUS" + " INTEGER " +
+                        ")"
         );
         db.execSQL(
                 "CREATE TABLE " + "STAPEL" + " (" +
@@ -38,8 +41,8 @@ public class DatenBankManager extends SQLiteOpenHelper {
                         "STAPEL_FARBE" + " TEXT," +
                         "STAPEL_STATUS" + " INTEGER,"+
                         "SET_ID" + " INTEGER," +
-                        "PRIMARY KEY(STAPEL_ID, SET_ID), " + // Fremdschlüssel auf STAPELSET
-                        "FOREIGN KEY (SET_ID) REFERENCES STAPELSET(SET_ID) ON DELETE CASCADE" +
+                        "CONSTRAINT stapel_pk PRIMARY KEY(STAPEL_ID, SET_ID), " + // Fremdschlüssel auf STAPELSET
+                        "CONSTRAINT stapel_fk FOREIGN KEY (SET_ID) REFERENCES STAPELSET(SET_ID) ON DELETE CASCADE " +
                          ")"
         );
         db.execSQL(
@@ -50,11 +53,10 @@ public class DatenBankManager extends SQLiteOpenHelper {
                         "KARTE_STATUS" + " INTEGER," +
                         "STAPEL_ID" + " INTEGER," +
                         "SET_ID" + " INTEGER, " +
-                        "PRIMARY KEY (KARTE_ID, STAPEL_ID, SET_ID), "+
-                        "FOREIGN KEY (STAPEL_ID, SET_ID) REFERENCES STAPEL(STAPEL_ID, SET_ID) ON DELETE CASCADE" +
-                         ")"
+                        "CONSTRAINT karte_pk PRIMARY KEY (KARTE_ID, STAPEL_ID, SET_ID), "+
+                        "CONSTRAINT karte_fk FOREIGN KEY (STAPEL_ID, SET_ID) REFERENCES STAPEL(STAPEL_ID, SET_ID) ON DELETE CASCADE" +
+                         ");"
         );
-
     }
     // KARTE-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
     public ArrayList<Integer> waehleKarten_1(int stapelID, int setID){
@@ -69,6 +71,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
                 ret.add(id);
             }while(cursor.moveToNext());
         }
+        db.close();
         return ret;
     }
 
@@ -84,6 +87,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
                 ret.add(id);
             }while(cursor.moveToNext());
         }
+        db.close();
         return ret;
     }
 
@@ -99,12 +103,12 @@ public class DatenBankManager extends SQLiteOpenHelper {
                 ret.add(id);
             }while(cursor.moveToNext());
         }
+        db.close();
         return ret;
     }
 
     public void insertKarte(String frage, String antwort ,int stapelId ,int setId ,int status) {
         SQLiteDatabase db = this.getWritableDatabase();
-
         // Abfrage, um den höchsten Wert von KARTE_ID für die gegebene SET_ID und STAPEL_ID zu ermitteln
         Cursor cursor = db.rawQuery("SELECT MAX(KARTE_ID) FROM KARTE WHERE SET_ID = ? AND STAPEL_ID = ?", new String[]{valueOf(setId), valueOf(stapelId)});
         int neueKarteID = 1; // Standardwert, wenn noch keine Karten für diese Kombination von SET_ID und STAPEL_ID existieren
@@ -143,10 +147,6 @@ public class DatenBankManager extends SQLiteOpenHelper {
         return kartenAnzahl;
     }
 
-    public int countKartenInSet(String setId) {
-        return 0;
-    }
-
     public Cursor getAllKarten(int setId, int stapelId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT KARTE_ID as _id, KARTE_FRAGE, KARTE_ANTWORT FROM KARTE " +
@@ -155,6 +155,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query,selectionArgs);
         if(cursor != null)
             cursor.moveToFirst();
+        db.close();
         return cursor;
     }
 
@@ -162,6 +163,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT KARTE_FRAGE FROM KARTE WHERE SET_ID = " + setID + " AND STAPEL_ID = " + stapelID + " AND KARTE_ID = " + kartenID,null);
         cursor.moveToFirst();
+        db.close();
         return cursor.getString(cursor.getColumnIndexOrThrow("KARTE_FRAGE"));
     }
 
@@ -169,6 +171,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT KARTE_ANTWORT FROM KARTE WHERE SET_ID = " + setID + " AND STAPEL_ID = " + stapelID + " AND KARTE_ID = " + kartenID,null);
         cursor.moveToFirst();
+        db.close();
         return cursor.getString(cursor.getColumnIndexOrThrow("KARTE_ANTWORT"));
     }
 
@@ -250,7 +253,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
 
         String updateQuery = "UPDATE STAPEL SET STAPEL_STATUS = " + i + " WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID;
         db.execSQL(updateQuery);
-
+        db.close();
         return i;
     }
 
@@ -261,6 +264,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID, null);
         cursor.moveToFirst();
         int summeAll = cursor.getInt(0);
+        db.close();
         return summeAll;
     }
 
@@ -269,6 +273,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT COUNT(KARTE_STATUS) FROM KARTE WHERE STAPEL_ID = " + stapelID + " AND SET_ID = " + setID + " AND KARTE_STATUS = 3",null);
         cursor.moveToFirst();
         int summeStatus3 = cursor.getInt(0);
+        db.close();
         return summeStatus3;
     }
 
@@ -285,7 +290,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         // Optional: Du kannst auch Karten im Stapel löschen, falls benötigt
         // Zum Beispiel:
         // db.delete("KARTE", "STAPEL_ID = ? AND SET_ID = ?", whereArgs);
-
+        db.delete("KARTE", whereClause, whereArgs);
         db.close();
     }
 //    public int getMaxStapelID(){
@@ -308,6 +313,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT STAPEL_ID AS _id, STAPEL_NAME, SET_ID FROM STAPEL WHERE SET_ID ="+setId, null);
         cursor.moveToFirst();
+        db.close();
         return cursor;
     }
 
@@ -316,6 +322,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT STAPEL_NAME FROM STAPEL WHERE STAPEL_ID = " + stapelID + " AND " + "SET_ID = " + setID,null);
         cursor.moveToFirst();
         String name = cursor.getString(0);
+        db.close();
         return name;
     }
     // SET-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
@@ -327,6 +334,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         neueZeile.put("SET_STATUS", setStatus);
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert("STAPELSET", null, neueZeile);
+        db.close();
     }
 
     public Cursor getAllSets() {
@@ -334,13 +342,16 @@ public class DatenBankManager extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT SET_ID AS _id, SET_NAME, SET_BESCHREIBUNG, SET_FARBE, SET_STATUS FROM STAPELSET",null);
         if(cursor != null)
             cursor.moveToFirst();
+        db.close();
         return cursor;
+
     }
 
     public int getSetID(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM STAPELSET WHERE SET_ID =" + id,null);
         cursor.moveToFirst();
+        db.close();
         return cursor.getInt(0);
     }
     public int getMaxSetID(){
@@ -348,6 +359,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         Cursor maxID = db.rawQuery("SELECT MAX(SET_ID) FROM STAPELSET",null);
         maxID.moveToFirst();
         int id = maxID.getInt(0);
+        db.close();
         return id;
     }
 
@@ -356,6 +368,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         Cursor name = db.rawQuery("SELECT SET_NAME FROM STAPELSET WHERE SET_ID = " + id,null);
         name.moveToFirst();
         String result = name.getString(0);
+        db.close();
         return result;
     }
 
@@ -364,6 +377,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         Cursor beschr = db.rawQuery("SELECT SET_BESCHREIBUNG FROM STAPELSET WHERE SET_ID = " + id,null);
         beschr.moveToFirst();
         String result = beschr.getString(0);
+        db.close();
         return result;
     }
 
@@ -372,6 +386,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         Cursor farbe = db.rawQuery("SELECT SET_FARBE FROM STAPELSET WHERE SET_ID = " + id,null);
         farbe.moveToFirst();
         String result = farbe.getString(0);
+        db.close();
         return result;
     }
 
@@ -382,6 +397,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         progress.moveToFirst();
         int setProgress = progress.getInt(0);
         Log.d("PROGRESS:",valueOf(setProgress));
+        db.close();
         return setProgress;
     }
 
