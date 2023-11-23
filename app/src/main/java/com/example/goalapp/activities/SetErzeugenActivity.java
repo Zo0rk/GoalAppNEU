@@ -2,7 +2,6 @@ package com.example.goalapp.activities;
 
 import static java.lang.String.valueOf;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.goalapp.R;
 import com.example.goalapp.database.DatenBankManager;
 
-public class SetErzeugen extends AppCompatActivity implements View.OnClickListener {
+public class SetErzeugenActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button abbrechen;
     private Button speichern;
@@ -77,6 +76,9 @@ public class SetErzeugen extends AppCompatActivity implements View.OnClickListen
                     }
                 }
             }
+        }
+        if(v == abbrechen) {
+            finish();
         }
     }
 }

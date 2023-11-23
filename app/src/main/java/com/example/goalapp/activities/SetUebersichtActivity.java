@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -23,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.example.goalapp.R;
-import com.example.goalapp.adapter.MainUebersichtCursorAdapter;
 import com.example.goalapp.adapter.SetUebersichtCursorAdapter;
 import com.example.goalapp.database.DatenBankManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -67,7 +65,7 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
 
         // Erstellt einen neuen Stapel im Set mit entsprechender set-id
         neu.setOnClickListener(view -> {
-            Intent intent2 = new Intent(this,Stapel_erstellen.class);
+            Intent intent2 = new Intent(this, StapelErstellenActivity.class);
             intent2.putExtra("SET_ID",setID);
             startActivity(intent2);
         });
@@ -82,7 +80,7 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
             Intent intent;
 
             if(anzKarten != 0) {
-                intent = new Intent(this, Lernen.class);
+                intent = new Intent(this, LernenActivity.class);
             }
             else{
                 Log.d("anzKarten",valueOf(anzKarten));

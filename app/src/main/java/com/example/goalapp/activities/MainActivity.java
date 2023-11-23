@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,9 +20,6 @@ import com.example.goalapp.adapter.MainUebersichtCursorAdapter;
 import com.example.goalapp.R;
 import com.example.goalapp.database.DatenBankManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -43,7 +39,7 @@ public class MainActivity extends AppCompatActivity  {
         registerForContextMenu(listView);
 
         newButton.setOnClickListener(view -> {
-            Intent intent = new Intent(this, SetErzeugen.class);
+            Intent intent = new Intent(this, SetErzeugenActivity.class);
             startActivity(intent);
         });
 
@@ -75,10 +71,16 @@ public class MainActivity extends AppCompatActivity  {
         getMenuInflater().inflate(R.menu.context_menu, menu);
     }
 
+    // Menü, das bei längeren Drücken eines Listenelementes erscheint
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int selectedItemPosition = info.position;
         if(item.getItemId() == R.id.edit) {
+            // Öffne Activity, die das ausgewählte Set bearbeiten soll
+            int selectedItemID = (int) adapter.getItemId(selectedItemPosition);
+            Intent intent = new Intent(this, SetBearbetienActivity.class);
+            intent.putExtra("SET_ID", selectedItemID);
+            startActivity(intent);
             return true;
         } else if (item.getItemId() == R.id.delete) {
             // Zeige eine Bestätigungsdialogbox an

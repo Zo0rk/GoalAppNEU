@@ -444,4 +444,16 @@ public class DatenBankManager extends SQLiteOpenHelper {
     }
 
 
+    public void updateSet(int id, String setName, String setBeschreibung, String selectedColor) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues updateValues = new ContentValues();
+        updateValues.put("SET_NAME", setName);
+        updateValues.put("SET_BESCHREIBUNG", setBeschreibung);
+        updateValues.put("SET_FARBE", selectedColor);
+
+        db.update("STAPELSET", updateValues, "SET_ID = ?", new String[]{String.valueOf(id)});
+
+        db.close();
+    }
 }

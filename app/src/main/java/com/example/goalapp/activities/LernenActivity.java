@@ -5,7 +5,6 @@ import static java.lang.String.valueOf;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.goalapp.R;
 import com.example.goalapp.database.DatenBankManager;
 
-public class Lernen extends AppCompatActivity implements View.OnClickListener{
+public class LernenActivity extends AppCompatActivity implements View.OnClickListener{
 
     private TextView stapelName;
     private ProgressBar progressBar;

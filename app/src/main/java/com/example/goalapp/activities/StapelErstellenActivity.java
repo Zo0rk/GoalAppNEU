@@ -12,7 +12,7 @@ import com.example.goalapp.R;
 import com.example.goalapp.database.DatenBankManager;
 
 
-public class Stapel_erstellen extends AppCompatActivity implements View.OnClickListener {
+public class StapelErstellenActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText name;
     private EditText beschreibung;

@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="35dp"
                     android:layout_marginTop="20dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="10dp"
                     android:paddingRight="50dp"
                     android:text="ALLE STAPEL:"
                     android:textStyle="bold"
@@ -65,15 +65,22 @@
                     app:tint="@color/white" />
             </LinearLayout>
 
-
+            <View
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:id="@+id/divider4"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="?android:attr/listDivider"
+                android:backgroundTint="@color/white"/>
 
             <ListView
                 android:id="@+id/setUebersichtListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:listSelector="@drawable/list_item_selector"/>
+                android:listSelector="@drawable/list_item_selector"
+              />
             <View
                 android:id="@+id/divider3"
                 android:layout_width="match_parent"

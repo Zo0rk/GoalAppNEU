@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.SetBearbetienActivity"
+    android:background="@color/darkmode1">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="-264dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/darkmode1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/setBearbeitenHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="35dp"
+                android:layout_marginTop="35dp"
+                android:layout_marginBottom="15dp"
+                android:text="SET BEARBEITEN"
+                android:textColor="@color/white"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/setBearbeitenNameEdit"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginHorizontal="35dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/darkmode3"
+                android:hint="Neuer Namen eingeben..."
+                android:textColor="@color/white"
+                android:textColorHint="@color/lightgrey" />
+
+
+            <EditText
+                android:id="@+id/setBearbeitenBeschrEdit"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginHorizontal="35dp"
+                android:background="@color/darkmode3"
+                android:gravity="left"
+                android:hint="Neue Beschreibung eingeben..."
+                android:textColor="@color/white"
+                android:textColorHint="@color/lightgrey" />
+
+            <TextView
+                android:id="@+id/setBearbeitenFarbeHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="35dp"
+                android:layout_marginVertical="15dp"
+                android:text="FARBE WÄHLEN:"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+            <RadioGroup
+                android:id="@+id/setBearbeitenRadioGr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="35dp"
+                android:background="@color/darkmode1"
+                android:orientation="vertical"
+                android:paddingVertical="5dp">
+                    <RadioButton
+                        android:id="@+id/setBearbeitenRadioRed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="fill|center"
+                        android:paddingHorizontal="10dp"
+                        android:buttonTint="@color/red"
+                        android:text="ROT"
+                        android:textColor="@color/red"
+                        android:checked="false"/>
+
+                    <RadioButton
+                        android:id="@+id/setBearbeitenRadioGruen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="fill|center"
+                        android:paddingHorizontal="10dp"
+                        android:buttonTint="@color/green"
+                        android:text="GRÜN"
+                        android:textColor="@color/green"
+                        android:checked="false"/>
+
+                    <RadioButton
+                        android:id="@+id/setBearbeitenRadioGelb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="fill|center"
+                        android:paddingHorizontal="10dp"
+                        android:buttonTint="@color/yellow"
+                        android:text="GELB"
+                        android:textColor="@color/yellow"
+                        android:checked="false"/>
+
+                    <RadioButton
+                        android:id="@+id/setBearbeitenRadioPurple"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="fill|center"
+                        android:paddingHorizontal="10dp"
+                        android:buttonTint="@color/purple"
+                        android:text="LILA"
+                        android:textColor="@color/purple"
+                        android:checked="false"/>
+
+                    <RadioButton
+                        android:id="@+id/setBearbeitenRadioOrange"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="fill|center"
+                        android:buttonTint="@color/orange"
+                        android:paddingHorizontal="10dp"
+                        android:text="ORANGE"
+                        android:textColor="@color/orange"
+                        android:checked="false"/>
+
+                    <RadioButton
+                        android:id="@+id/setBearbeitenRadioBlue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="fill|center"
+                        android:paddingHorizontal="10dp"
+                        android:buttonTint="@color/blue"
+                        android:text="BLAU"
+                        android:textColor="@color/blue"
+                        android:checked="false"/>
+            </RadioGroup>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="25dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/setBearbeitenAbbrechenButton"
+                    android:layout_width="130dp"
+                    android:layout_height="50dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:backgroundTint="@color/darkmode5"
+                    android:text="ABBRECHEN"
+                    app:cornerRadius="2dp" />
+
+                <Button
+                    android:id="@+id/setBearbeitenSpeichernButton"
+                    android:layout_width="130dp"
+                    android:layout_height="50dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:backgroundTint="@color/darkmode5"
+                    android:text="SPEICHERN"
+                    app:cornerRadius="2dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
