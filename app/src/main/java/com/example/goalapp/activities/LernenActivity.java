@@ -28,6 +28,7 @@ public class LernenActivity extends AppCompatActivity implements View.OnClickLis
     private Button unsicher;
     private Button mittel;
     private Button sicher;
+    private Button zurück;
 
     // DB-Zugriffe usw................................................................................................................
     private DatenBankManager db;
@@ -59,10 +60,15 @@ public class LernenActivity extends AppCompatActivity implements View.OnClickLis
         unsicher = findViewById(R.id.unsicher);
         mittel = findViewById(R.id.mittel);
         sicher = findViewById(R.id.sicher);
+        zurück = findViewById(R.id.verlasseLernActivity);
 
         unsicher.setVisibility(View.INVISIBLE);
         mittel.setVisibility(View.INVISIBLE);
         sicher.setVisibility(View.INVISIBLE);
+
+        zurück.setOnClickListener(view -> {
+            finish();
+        });
 
         antwortAnzeigen.setOnClickListener(this);
         unsicher.setOnClickListener(this);

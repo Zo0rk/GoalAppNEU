@@ -154,6 +154,19 @@
                 android:textStyle="bold"
                 app:cornerRadius="2dp" />
         </LinearLayout>
-
+        <Button
+            android:id="@+id/verlasseLernActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:minWidth="500dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/darkmode5"
+            android:text="Fertig gelernt"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            app:cornerRadius="2dp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
