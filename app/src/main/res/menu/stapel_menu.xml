@@ -8,7 +8,7 @@
         android:title="Karten anzeigen"/>
     <item
         android:id="@+id/stapelBearbeiten"
-        android:title="Stapel Bearbeiten"/>
+        android:title="Name ändern"/>
 
     <item
         android:id="@+id/deleteStapel"

@@ -173,11 +173,10 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
             builder.setPositiveButton("OK", (dialog, which) -> {
                 String newName = input.getText().toString().trim();
                 // Hier solltest du die Logik implementieren, um den Namen des ListView-Elements zu aktualisieren
-                TextView textView = findViewById(R.id.stapelListenElementName);
-                textView.setText(newName);
                 DatenBankManager datenBankManager = new DatenBankManager(this);
 
-                datenBankManager.updateStapelName(stapelID, newName);
+                datenBankManager.updateStapelName(stapelID, setID, newName);
+                recreate();
             });
 
             builder.setNegativeButton("Abbrechen", (dialog, which) -> dialog.cancel());

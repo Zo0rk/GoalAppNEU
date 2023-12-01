@@ -326,24 +326,12 @@ public class DatenBankManager extends SQLiteOpenHelper {
         return name;
     }
 
-    public void updateStapelName(int stapelID, String newName) {
+    public void updateStapelName(int stapelID, int setID, String stapelName) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("STAPEL_NAME", newName);
+        ContentValues updateValues = new ContentValues();
+        updateValues.put("STAPEL_NAME", stapelName);
 
-        // WHERE-Klausel für die Aktualisierung
-        String whereClause = "STAPEL_ID = ?";
-        String[] whereArgs = {String.valueOf(stapelID)};
-
-        // Aktualisiere den Namen in der Datenbank
-        int affectedRows = db.update("STAPEL", values, whereClause, whereArgs);
-
-        // Überprüfe, ob die Aktualisierung erfolgreich war
-        if (affectedRows > 0) {
-            Log.d("Datenbank", "Stapelname erfolgreich aktualisiert");
-        } else {
-            Log.e("Datenbank", "Fehler beim Aktualisieren des Stapelnamens");
-        }
+        db.update("STAPEL", updateValues, "SET_ID = ? AND STAPEL_ID = ?", new String[]{String.valueOf(setID), String.valueOf(stapelID)});
 
         // Schließe die Datenbankverbindung
         db.close();
