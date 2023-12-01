@@ -325,6 +325,29 @@ public class DatenBankManager extends SQLiteOpenHelper {
         db.close();
         return name;
     }
+
+    public void updateStapelName(int stapelID, String newName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("STAPEL_NAME", newName);
+
+        // WHERE-Klausel für die Aktualisierung
+        String whereClause = "STAPEL_ID = ?";
+        String[] whereArgs = {String.valueOf(stapelID)};
+
+        // Aktualisiere den Namen in der Datenbank
+        int affectedRows = db.update("STAPEL", values, whereClause, whereArgs);
+
+        // Überprüfe, ob die Aktualisierung erfolgreich war
+        if (affectedRows > 0) {
+            Log.d("Datenbank", "Stapelname erfolgreich aktualisiert");
+        } else {
+            Log.e("Datenbank", "Fehler beim Aktualisieren des Stapelnamens");
+        }
+
+        // Schließe die Datenbankverbindung
+        db.close();
+    }
     // SET-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
     public void insertSet(String name,String beschreibung, String farbe, int setStatus){
         ContentValues neueZeile = new ContentValues();
@@ -438,12 +461,6 @@ public class DatenBankManager extends SQLiteOpenHelper {
         db.close();
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-    }
-
-
     public void updateSet(int id, String setName, String setBeschreibung, String selectedColor) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -456,4 +473,11 @@ public class DatenBankManager extends SQLiteOpenHelper {
 
         db.close();
     }
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+
+
+
 }

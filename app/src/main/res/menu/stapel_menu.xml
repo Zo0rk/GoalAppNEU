@@ -7,6 +7,10 @@
         android:id="@+id/showCards"
         android:title="Karten anzeigen"/>
     <item
-        android:id="@+id/delete"
+        android:id="@+id/stapelBearbeiten"
+        android:title="Stapel Bearbeiten"/>
+
+    <item
+        android:id="@+id/deleteStapel"
         android:title="Stapel Löschen"/>
 </menu>

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.example.goalapp.R;
+import com.example.goalapp.adapter.MainUebersichtCursorAdapter;
 import com.example.goalapp.adapter.SetUebersichtCursorAdapter;
 import com.example.goalapp.database.DatenBankManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -36,10 +39,8 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
     private String setFarbe;
     private ProgressBar mainProgressBar;
     private int mainProgress;
-
     ListView stapelListView;
     private FloatingActionButton neu;
-
     SetUebersichtCursorAdapter adapter;
     int setID;
     private int stapelID;
@@ -60,13 +61,13 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
         neu = findViewById(R.id.addButton);
 
         setID = getIntent().getIntExtra("SET_ID", 0);
-        stapelID = getIntent().getIntExtra("STAPEL_ID",0); // siehe z. 87...
+        stapelID = getIntent().getIntExtra("STAPEL_ID", 0); // siehe z. 87...
         buildUpFromDB(setID);
 
         // Erstellt einen neuen Stapel im Set mit entsprechender set-id
         neu.setOnClickListener(view -> {
             Intent intent2 = new Intent(this, StapelErstellenActivity.class);
-            intent2.putExtra("SET_ID",setID);
+            intent2.putExtra("SET_ID", setID);
             startActivity(intent2);
         });
 
@@ -76,14 +77,13 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
             stapelID = (int) adapter.getItemId(i);
 
             DatenBankManager db = new DatenBankManager(this);
-            int anzKarten = db.getAnzKartenInStapel(stapelID,setID);
+            int anzKarten = db.getAnzKartenInStapel(stapelID, setID);
             Intent intent;
 
-            if(anzKarten != 0) {
+            if (anzKarten != 0) {
                 intent = new Intent(this, LernenActivity.class);
-            }
-            else{
-                Log.d("anzKarten",valueOf(anzKarten));
+            } else {
+                Log.d("anzKarten", valueOf(anzKarten));
                 intent = new Intent(this, KarteErstellenActivity.class);
             }
             intent.putExtra("STAPEL_ID", stapelID);
@@ -105,7 +105,7 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
         buildUpFromDB(setID);
     }
 
-    private void buildUpFromDB(int id){
+    private void buildUpFromDB(int id) {
         DatenBankManager db = new DatenBankManager(this);
         db.setSetProgress(id);
         setHeader = db.getSetName(id);
@@ -114,7 +114,7 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
         setHeaderView.setText(setHeader);
         progress = db.getSetProgress(id);
         progressView.setText(valueOf(progress) + "%");
-        mainProgressBar.setProgress(progress,true);
+        mainProgressBar.setProgress(progress, true);
         //setBeschreibungView.setText(setBeschreibung); IST JETZT FORTSCHRITT...
 
 
@@ -132,10 +132,10 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
         mainProgressBar.setProgressTintList(ColorStateList.valueOf(color));
         setHeaderView.setTextColor(color);
     }
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-
         // Inflater für das Kontextmenü erstellen
         getMenuInflater().inflate(R.menu.stapel_menu, menu);
     }
@@ -143,7 +143,7 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         stapelID = (int) adapter.getItemId(info.position);
-        if(item.getItemId() == R.id.newCard) {
+        if (item.getItemId() == R.id.newCard) {
             Intent intent = new Intent(this, KarteErstellenActivity.class);
             intent.putExtra("STAPEL_ID", stapelID);
             intent.putExtra("SET_ID", setID);
@@ -155,10 +155,34 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
             intent.putExtra("SET_ID", setID);
             startActivity(intent);
 
-        } else if (item.getItemId() == R.id.delete) {
+        } else if (item.getItemId() == R.id.deleteStapel) {
             // Zeige eine Bestätigungsdialogbox an
             showDeleteConfirmationDialog(info.position);
             return true;
+        } else if (item.getItemId() == R.id.stapelBearbeiten) {
+            // Ändere Name
+            // Schritte 1 und 2: Aufruf des Dialogs
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Neuen Namen eingeben");
+
+            // Eingabefeld für den neuen Namen
+            final EditText input = new EditText(this);
+            builder.setView(input);
+
+            // Schritte 3 und 4: Bestätigen und aktualisieren
+            builder.setPositiveButton("OK", (dialog, which) -> {
+                String newName = input.getText().toString().trim();
+                // Hier solltest du die Logik implementieren, um den Namen des ListView-Elements zu aktualisieren
+                TextView textView = findViewById(R.id.stapelListenElementName);
+                textView.setText(newName);
+                DatenBankManager datenBankManager = new DatenBankManager(this);
+
+                datenBankManager.updateStapelName(stapelID, newName);
+            });
+
+            builder.setNegativeButton("Abbrechen", (dialog, which) -> dialog.cancel());
+
+            builder.show();
         }
         return super.onContextItemSelected(item);
     }
