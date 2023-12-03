@@ -9,11 +9,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.example.goalapp.models.Karte;
+
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class DatenBankManager extends SQLiteOpenHelper {
 
-    public static final int DATENBANK_VERSION = 4;
+    public static final int DATENBANK_VERSION = 1;
     public static final String DATENBANK_NAMEN = "Karteikarten.db";
     public DatenBankManager(Context cxt) {
         super(cxt, DATENBANK_NAMEN, null, DATENBANK_VERSION);
@@ -53,6 +57,8 @@ public class DatenBankManager extends SQLiteOpenHelper {
                         "KARTE_STATUS" + " INTEGER," +
                         "STAPEL_ID" + " INTEGER," +
                         "SET_ID" + " INTEGER, " +
+                        "LETZTES_LERNDATUM" + " LONG, " +
+                        "NAECHSTES_LERNDATUM" + " LONG, " +
                         "CONSTRAINT karte_pk PRIMARY KEY (KARTE_ID, STAPEL_ID, SET_ID), "+
                         "CONSTRAINT karte_fk FOREIGN KEY (STAPEL_ID, SET_ID) REFERENCES STAPEL(STAPEL_ID, SET_ID) ON DELETE CASCADE" +
                          ");"
@@ -107,16 +113,20 @@ public class DatenBankManager extends SQLiteOpenHelper {
         return ret;
     }
 
-    public void insertKarte(String frage, String antwort ,int stapelId ,int setId ,int status) {
+    public void insertKarte(String frage, String antwort, int stapelId, int setId, int status) {
         SQLiteDatabase db = this.getWritableDatabase();
+
         // Abfrage, um den höchsten Wert von KARTE_ID für die gegebene SET_ID und STAPEL_ID zu ermitteln
-        Cursor cursor = db.rawQuery("SELECT MAX(KARTE_ID) FROM KARTE WHERE SET_ID = ? AND STAPEL_ID = ?", new String[]{valueOf(setId), valueOf(stapelId)});
+        Cursor cursor = db.rawQuery("SELECT MAX(KARTE_ID) FROM KARTE WHERE SET_ID = ? AND STAPEL_ID = ?", new String[]{String.valueOf(setId), String.valueOf(stapelId)});
         int neueKarteID = 1; // Standardwert, wenn noch keine Karten für diese Kombination von SET_ID und STAPEL_ID existieren
 
         if (cursor.moveToFirst()) {
             neueKarteID = cursor.getInt(0) + 1; // Die neue KARTE_ID ist der höchste Wert + 1
         }
         cursor.close();
+
+        long aktuellesDatum = System.currentTimeMillis();
+        long naechstesLerndatum = aktuellesDatum; // Standardwert für naechstesLerndatum ist aktuellesDatum
 
         ContentValues neueZeile = new ContentValues();
         neueZeile.put("KARTE_ID", neueKarteID);
@@ -125,6 +135,8 @@ public class DatenBankManager extends SQLiteOpenHelper {
         neueZeile.put("KARTE_STATUS", status);
         neueZeile.put("STAPEL_ID", stapelId);
         neueZeile.put("SET_ID", setId);
+        neueZeile.put("LETZTES_LERNDATUM", aktuellesDatum);
+        neueZeile.put("NAECHSTES_LERNDATUM", naechstesLerndatum);
 
         db.insert("KARTE", null, neueZeile);
 
@@ -181,7 +193,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         Log.d("DB","OK");
     }*/
 
-    public void setStatus(int setID, int stapelID, int kartenID, int status){
+    public void setKarteStatus(int setID, int stapelID, int kartenID, int status){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("KARTE_STATUS", status);
@@ -199,6 +211,114 @@ public class DatenBankManager extends SQLiteOpenHelper {
 
         db.close();
     }
+
+    public void updateKarteStatus(long karteId, long stapelId, long setId, int bewertung) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long aktuellesDatum = System.currentTimeMillis();
+
+        // Hier implementierst du deine Logik, um das neue Datum basierend auf der Bewertung zu berechnen
+        long neuesDatum = berechneNeuesDatum(bewertung, aktuellesDatum);
+
+        // SQL-Anweisung zum Aktualisieren der Lerndaten unter Verwendung von Primärschlüsseln
+        String updateQuery = "UPDATE KARTE " +
+                "SET LETZTES_LERNDATUM = " + aktuellesDatum +
+                ", NAECHSTES_LERNDATUM = " + neuesDatum +
+                " WHERE KARTE_ID = " + karteId +
+                " AND STAPEL_ID = " + stapelId +
+                " AND SET_ID = " + setId;
+
+        // Führe die SQL-Anweisung aus
+        db.execSQL(updateQuery);
+
+        // Schließe die Verbindung zur Datenbank
+        db.close();
+    }
+
+    private long berechneNeuesDatum(int bewertung, long aktuellesDatum) {
+        // Hier implementierst du deine Logik für die Berechnung des neuen Datums basierend auf der Bewertung
+        // Beispiellogik:
+        switch (bewertung) {
+            case 1: // nochmal
+                return aktuellesDatum + TimeUnit.SECONDS.toMillis(5);
+            case 2: // schwer
+                return aktuellesDatum + TimeUnit.SECONDS.toMillis(10);
+            case 3: // gut
+                return aktuellesDatum + TimeUnit.SECONDS.toMillis(15);
+            case 4: // einfach
+                return aktuellesDatum + TimeUnit.SECONDS.toMillis(25);
+            default:
+                return aktuellesDatum; // Standardfall
+        }
+    }
+    // Methode, um die Karte mit dem ältesten naechstesLerndatum zu erhalten
+    public Karte waehleAeltesteFaelligeKarte(int stapelId, int setId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Karte aeltesteKarte = null;
+
+        // SQL-Abfrage, um die Karte mit dem ältesten naechstesLerndatum zu erhalten
+        String selectQuery = "SELECT * FROM KARTE " +
+                "WHERE STAPEL_ID = ? AND SET_ID = ? " +
+                "ORDER BY NAECHSTES_LERNDATUM ASC LIMIT 1";
+
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(stapelId), String.valueOf(setId)});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            // Extrahiere die Daten aus dem Cursor und erstelle ein Karte-Objekt
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow("KARTE_ID"));
+            String frage = cursor.getString(cursor.getColumnIndexOrThrow("KARTE_FRAGE"));
+            String antwort = cursor.getString(cursor.getColumnIndexOrThrow("KARTE_ANTWORT"));
+            int status = cursor.getInt(cursor.getColumnIndexOrThrow("KARTE_STATUS"));
+            long letztesLerndatum = cursor.getLong(cursor.getColumnIndexOrThrow("LETZTES_LERNDATUM"));
+            long naechstesLerndatum = cursor.getLong(cursor.getColumnIndexOrThrow("NAECHSTES_LERNDATUM"));
+
+            aeltesteKarte = new Karte(id, frage, antwort, status , stapelId, setId, letztesLerndatum, naechstesLerndatum);
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        db.close();
+
+        return aeltesteKarte;
+    }
+
+    public List<Karte> waehleZuLernendeKarten() {
+        List<Karte> zuLernendeKarten = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        long aktuellesDatum = System.currentTimeMillis();
+        long endeDesTagesHeuteDatum = aktuellesDatum + + TimeUnit.DAYS.toMillis(1) - 1; // bis 23:59:59 Uhr
+
+        // SQL-Anweisung zum Auswählen von Karten, die jetzt gelernt werden sollen
+        String selectQuery = "SELECT * FROM KARTE " +
+                "WHERE NAECHSTES_LERNDATUM <= " + aktuellesDatum;
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                // Daten aus dem Cursor extrahieren und in Karte-Objekte umwandeln
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("KARTE_ID"));
+                String frage = cursor.getString(cursor.getColumnIndexOrThrow("KARTE_FRAGE"));
+                String antwort = cursor.getString(cursor.getColumnIndexOrThrow("KARTE_ANTWORT"));
+                int status = cursor.getInt(cursor.getColumnIndexOrThrow("KARTE_STATUS"));
+                int stapelId = cursor.getInt(cursor.getColumnIndexOrThrow("STAPEL_ID"));
+                int setId = cursor.getInt(cursor.getColumnIndexOrThrow("SET_ID"));
+                long letztesLerndatum = cursor.getLong(cursor.getColumnIndexOrThrow("LETZTES_LERNDATUM"));
+                long naechstesLerndatum = cursor.getLong(cursor.getColumnIndexOrThrow("NAECHSTES_LERNDATUM"));
+
+                Karte karte = new Karte(id, frage, antwort, status, stapelId, setId, letztesLerndatum, naechstesLerndatum);
+                zuLernendeKarten.add(karte);
+            } while (cursor.moveToNext());
+
+            cursor.close();
+        }
+        // Schließe die Verbindung zur Datenbank
+        db.close();
+
+        return zuLernendeKarten;
+    }
+
     // STAPEL-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
     public void insertStapel(String stapelName, String stapelBeschreibung, String stapelFarbe, int stapelStatus, int setID){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -280,35 +400,14 @@ public class DatenBankManager extends SQLiteOpenHelper {
     public void deleteStapel(int stapelID, int setID) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // Definiere die WHERE-Bedingung für das Löschen des Stapels
         String whereClause = "STAPEL_ID = ? AND SET_ID = ?";
         String[] whereArgs = {valueOf(stapelID), valueOf(setID)};
 
         // Lösche den Stapel aus der Tabelle "STAPEL"
         db.delete("STAPEL", whereClause, whereArgs);
-
-        // Optional: Du kannst auch Karten im Stapel löschen, falls benötigt
-        // Zum Beispiel:
-        // db.delete("KARTE", "STAPEL_ID = ? AND SET_ID = ?", whereArgs);
         db.delete("KARTE", whereClause, whereArgs);
         db.close();
     }
-//    public int getMaxStapelID(){
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        Cursor maxID = db.rawQuery("SELECT MAX(STAPEL_ID) FROM STAPEL",null);
-//        maxID.moveToFirst();
-//        int id = maxID.getInt(0);
-//        return id;
-//    }
-
-//    // Ka was ich gemacht habe????
-//    public int getStapelID(int id) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        Cursor cursor = db.rawQuery("SELECT * FROM STAPEL WHERE STAPEL_ID =" + id,null);
-//        cursor.moveToFirst();
-//        return cursor.getInt(0);
-//    }
-
     public Cursor getAllStapelFromSetID(int setId) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT STAPEL_ID AS _id, STAPEL_NAME, SET_ID FROM STAPEL WHERE SET_ID ="+setId, null);
@@ -355,7 +454,6 @@ public class DatenBankManager extends SQLiteOpenHelper {
             cursor.moveToFirst();
         db.close();
         return cursor;
-
     }
 
     public int getSetID(int id) {

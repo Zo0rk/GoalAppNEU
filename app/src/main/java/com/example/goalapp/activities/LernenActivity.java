@@ -19,23 +19,16 @@ import com.example.goalapp.database.DatenBankManager;
 
 public class LernenActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private TextView stapelName;
     private ProgressBar progressBar;
-    private TextView status;
-    private TextView progressText;
-    private TextView frage;
     private Button antwortAnzeigen;
     private Button unsicher;
     private Button mittel;
     private Button sicher;
-    private Button zurück;
 
     // DB-Zugriffe usw................................................................................................................
     private DatenBankManager db;
     private int stapelID;
     private int setID;
-    private Intent i;
-
     private int randomKartenID;
 
     @Override
@@ -44,29 +37,29 @@ public class LernenActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_lernen);
 
         db = new DatenBankManager(this);
-        i = getIntent();
+        Intent i = getIntent();
         stapelID = i.getIntExtra("STAPEL_ID",0);
         setID = i.getIntExtra("SET_ID",0);
         int color = i.getIntExtra("SET_COLOR",0);
 
         KartenVerwaltung kv = new KartenVerwaltung(stapelID,setID,this);
 
-        stapelName = findViewById(R.id.lernenKapitel);
+        TextView stapelName = findViewById(R.id.lernenKapitel);
         progressBar = findViewById(R.id.mainProgressBar);
-        status = findViewById(R.id.status);
-        progressText = findViewById(R.id.progressText);
-        frage = findViewById(R.id.frageView);
+        TextView status = findViewById(R.id.status);
+        TextView progressText = findViewById(R.id.progressText);
+        TextView frage = findViewById(R.id.frageView);
         antwortAnzeigen = findViewById(R.id.antwortAnzeigen);
         unsicher = findViewById(R.id.unsicher);
         mittel = findViewById(R.id.mittel);
         sicher = findViewById(R.id.sicher);
-        zurück = findViewById(R.id.verlasseLernActivity);
+        Button zurueck = findViewById(R.id.verlasseLernActivity);
 
         unsicher.setVisibility(View.INVISIBLE);
         mittel.setVisibility(View.INVISIBLE);
         sicher.setVisibility(View.INVISIBLE);
 
-        zurück.setOnClickListener(view -> {
+        zurueck.setOnClickListener(view -> {
             finish();
         });
 
@@ -112,18 +105,18 @@ public class LernenActivity extends AppCompatActivity implements View.OnClickLis
             zeigeAntwort(randomKartenID);
         }
         if(v == unsicher){
-            db.setStatus(setID,stapelID,randomKartenID,1);
+            db.setKarteStatus(setID,stapelID,randomKartenID,1);
             progressBar.setProgress(db.getStapelStatus(stapelID,setID),true);
             progressBar.setBackgroundColor(1);
             this.recreate();
         }
         if(v == mittel){
-            db.setStatus(setID,stapelID,randomKartenID,2);
+            db.setKarteStatus(setID,stapelID,randomKartenID,2);
             progressBar.setProgress(db.getStapelStatus(stapelID,setID),true);
             this.recreate();
         }
         if(v == sicher){
-            db.setStatus(setID,stapelID,randomKartenID,3);
+            db.setKarteStatus(setID,stapelID,randomKartenID,3);
             progressBar.setProgress(db.getStapelStatus(stapelID,setID),true);
             this.recreate();
         }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GigaKarten</string>
+    <string name="app_name">Karteikarten</string>
     <string name="title_activity_set_listitem">set_listitem</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>

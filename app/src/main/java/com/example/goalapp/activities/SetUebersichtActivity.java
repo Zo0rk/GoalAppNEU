@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -24,23 +23,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.example.goalapp.R;
-import com.example.goalapp.adapter.MainUebersichtCursorAdapter;
 import com.example.goalapp.adapter.SetUebersichtCursorAdapter;
 import com.example.goalapp.database.DatenBankManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class SetUebersichtActivity extends AppCompatActivity implements View.OnClickListener {
-    private int progress;
     private TextView setHeaderView;
-    private String setHeader;
-    private TextView setBeschreibungView;
     private TextView progressView;
-    private String setBeschreibung;
-    private String setFarbe;
     private ProgressBar mainProgressBar;
-    private int mainProgress;
     ListView stapelListView;
-    private FloatingActionButton neu;
     SetUebersichtCursorAdapter adapter;
     int setID;
     private int stapelID;
@@ -52,13 +43,13 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
         setContentView(R.layout.activity_set_uebersicht);
 
         setHeaderView = findViewById(R.id.setHeader);
-        setBeschreibungView = findViewById(R.id.setBeschreibung);
+//        TextView setBeschreibungView = findViewById(R.id.setBeschreibung);
         progressView = findViewById(R.id.progressView);
         mainProgressBar = findViewById(R.id.MainProgressBar);
         stapelListView = findViewById(R.id.stapelListView);
         registerForContextMenu(stapelListView);
 
-        neu = findViewById(R.id.addButton);
+        FloatingActionButton neu = findViewById(R.id.addButton);
 
         setID = getIntent().getIntExtra("SET_ID", 0);
         stapelID = getIntent().getIntExtra("STAPEL_ID", 0); // siehe z. 87...
@@ -81,7 +72,7 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
             Intent intent;
 
             if (anzKarten != 0) {
-                intent = new Intent(this, LernenActivity.class);
+                intent = new Intent(this, LernenSpacedRepetitionActivity.class);
             } else {
                 Log.d("anzKarten", valueOf(anzKarten));
                 intent = new Intent(this, KarteErstellenActivity.class);
@@ -108,12 +99,12 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
     private void buildUpFromDB(int id) {
         DatenBankManager db = new DatenBankManager(this);
         db.setSetProgress(id);
-        setHeader = db.getSetName(id);
-        setBeschreibung = db.getSetBeschreibung(id);
-        setFarbe = db.getSetFarbe(id);
+        String setHeader = db.getSetName(id);
+        String setBeschreibung = db.getSetBeschreibung(id);
+        String setFarbe = db.getSetFarbe(id);
         setHeaderView.setText(setHeader);
-        progress = db.getSetProgress(id);
-        progressView.setText(valueOf(progress) + "%");
+        int progress = db.getSetProgress(id);
+        progressView.setText(progress + "%");
         mainProgressBar.setProgress(progress, true);
         //setBeschreibungView.setText(setBeschreibung); IST JETZT FORTSCHRITT...
 

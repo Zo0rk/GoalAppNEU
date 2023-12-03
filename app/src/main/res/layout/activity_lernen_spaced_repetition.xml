@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkmode1"
+    tools:context=".activities.LernenSpacedRepetitionActivity"
+    android:orientation="vertical">
+    <ImageButton
+        android:id="@+id/buttonSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="24dp"
+        android:minHeight="24dp"
+        android:src="@drawable/baseline_more_horiz_24"
+        android:background="@color/darkmode1"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="350dp"
+        />
+<!-- Frage -->
+<TextView
+    android:id="@+id/textViewQuestion"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Frage hier"
+    android:textSize="18sp"
+    android:layout_gravity="center"
+    android:layout_marginTop="40dp"/>
+
+    <View
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginVertical="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginHorizontal="10dp"
+        android:background="?android:attr/listDivider"
+        android:backgroundTint="@color/white"/>
+
+<!-- Antwort -->
+<TextView
+    android:id="@+id/textViewAnswer"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Antwort hier"
+    android:textSize="16sp"
+    android:layout_gravity="center"
+    android:visibility="invisible"/>
+
+<!-- Button zum Anzeigen der Antwort -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:gravity="bottom">
+        <Button
+            android:id="@+id/buttonShowAnswer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center"
+            android:background="@color/darkmode5"
+            android:paddingHorizontal="10dp"
+            android:text="Antwort anzeigen" />
+
+        <!-- Button-Container für Nochmal, Schwer, Gut, Einfach -->
+        <LinearLayout
+            android:id="@+id/buttonsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            > <!-- Standardmäßig unsichtbar -->
+
+            <Button
+                android:id="@+id/buttonAgain"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:textColor="@color/red"
+                android:text="Nochmal"
+                android:backgroundTint="@color/darkmode5"
+                />
+
+            <Button
+                android:id="@+id/buttonHard"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/yellow"
+                android:text="Schwer"
+                android:backgroundTint="@color/darkmode5"
+                />
+
+            <Button
+                android:id="@+id/buttonGood"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/green"
+                android:text="Gut"
+                android:backgroundTint="@color/darkmode5"
+                />
+
+            <Button
+                android:id="@+id/buttonEasy"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue"
+                android:text="Einfach"
+                android:backgroundTint="@color/darkmode5"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

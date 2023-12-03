@@ -47,7 +47,6 @@ public class MainUebersichtCursorAdapter extends CursorAdapter {
 
         // Find the TextViews and ProgressBar in the layout
         TextView nameTextView = view.findViewById(R.id.set_listenelement_name);
-        TextView anzSichererFragen = view.findViewById(R.id.ANZ_FRAGEN_SICHER_BEANTW);
         ProgressBar setProgressBar = view.findViewById(R.id.STAPEL_FORTSCHRITT_ANZEIGE);
         nameTextView.setText(setName);
 
