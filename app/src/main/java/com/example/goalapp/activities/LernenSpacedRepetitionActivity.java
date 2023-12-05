@@ -1,6 +1,15 @@
 package com.example.goalapp.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.database.Cursor;
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.goalapp.adapter.MainUebersichtCursorAdapter;
 import com.example.goalapp.models.Karte;
 import com.example.goalapp.R;
 import com.example.goalapp.database.DatenBankManager;
@@ -25,7 +35,11 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
 
     private TextView textViewQuestion;
     private TextView textViewAnswer;
+    private EditText editTextQuestion;
+    private EditText getEditTextAnswer;
     private Button buttonShowAnswer;
+    private Button buttonApply;
+    private Button buttonDiscard;
     private LinearLayout buttonsContainer;
     private ImageButton buttonSettings;
     private int stapelID;
@@ -45,6 +59,8 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
         // Verknüpfung der Views mit den entsprechenden IDs aus dem Layout
         textViewQuestion = findViewById(R.id.textViewQuestion);
         textViewAnswer = findViewById(R.id.textViewAnswer);
+        editTextQuestion = findViewById(R.id.editTextViewQuestion);
+        getEditTextAnswer = findViewById(R.id.editTextViewAnswer);
         buttonShowAnswer = findViewById(R.id.buttonShowAnswer);
         buttonsContainer = findViewById(R.id.buttonsContainer);
         buttonSettings = findViewById(R.id.buttonSettings);
@@ -53,6 +69,8 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
         Button buttonHard = findViewById(R.id.buttonHard);
         Button buttonGood = findViewById(R.id.buttonGood);
         Button buttonEasy = findViewById(R.id.buttonEasy);
+        buttonApply = findViewById(R.id.buttonSaveChangesCard);
+        buttonDiscard = findViewById(R.id.buttonDiscardChangesCard);
 
         // Setze initialen Text für Frage und Antwort
         textViewQuestion.setText("Was ist die Hauptstadt von Deutschland?");
@@ -69,16 +87,31 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
             }
         });
 
+        buttonSettings.setOnClickListener(view -> {
+            PopupMenu popupMenu = new PopupMenu(this, view);
+            popupMenu.inflate(R.menu.karten_menu);
+            popupMenu.setOnMenuItemClickListener(menuItem -> {
+                if(menuItem.getItemId() == R.id.editKarte) {
+                    editTextQuestion.setVisibility(View.VISIBLE);
+                    getEditTextAnswer.setVisibility(View.VISIBLE);
 
+                    editTextQuestion.setText(textViewQuestion.getText());
+                    getEditTextAnswer.setText(textViewAnswer.getText());
 
-        // TODO: Implementiere die Logik für die Bewertung der Karte
+                    textViewQuestion.setVisibility(View.GONE);
+                    textViewAnswer.setVisibility(View.GONE);
 
-        // Einstellungen-Button
-        buttonSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: Implementiere die Logik für die Einstellungen
-            }
+                    buttonDiscard.setVisibility(View.VISIBLE);
+                    buttonApply.setVisibility(View.VISIBLE);
+//                    return true;
+                } else if(menuItem.getItemId() == R.id.deleteKarte) {
+                    // Popup um Löschen zu bestätigen
+                    showDeleteConfirmationDialog();
+                    // return true;
+                }
+                return false;
+            });
+            popupMenu.show();
         });
 
         buttonEasy.setOnClickListener(view -> {
@@ -131,6 +164,25 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
         db.close();
     }
 
+    private void showDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Löschen bestätigen");
+        builder.setMessage("Bist du sicher, dass du das Element löschen möchtest?");
+        builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                datenBankManager.deleteKarte(aktuellekarteID, stapelID, setID);
+                recreate();
+            }
+        });
+        builder.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Hier kannst du Aktionen ausführen, wenn der Benutzer "Nein" auswählt
+            }
+        });
+        builder.show();
+    }
     @Override
     protected void onDestroy() {
         datenBankManager.close();

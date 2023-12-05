@@ -65,6 +65,16 @@ public class DatenBankManager extends SQLiteOpenHelper {
         );
     }
     // KARTE-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
+    public void deleteKarte(int karteID, int stapelID, int setID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String whereClause = "KARTE_ID = ? AND STAPEL_ID = ? AND SET_ID = ?";
+        String[] whereArgs = {valueOf(karteID), valueOf(stapelID), valueOf(setID)};
+
+        db.delete("KARTE", whereClause, whereArgs);
+        db.close();
+    }
+
     public ArrayList<Integer> waehleKarten_1(int stapelID, int setID){
         ArrayList<Integer> ret = new ArrayList<Integer>();
 
