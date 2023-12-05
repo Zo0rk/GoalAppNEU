@@ -65,6 +65,18 @@ public class DatenBankManager extends SQLiteOpenHelper {
         );
     }
     // KARTE-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
+    public void updateKarte(int karteID, int stapelID, int setID, String neueFrage, String neueAntwort) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues updateValues = new ContentValues();
+        updateValues.put("KARTE_FRAGE", neueFrage);
+        updateValues.put("KARTE_ANTWORT", neueAntwort);
+
+        db.update("KARTE",updateValues, "KARTE_ID = ? AND STAPEL_ID = ? AND SET_ID = ?",
+                new String[]{String.valueOf(karteID), String.valueOf(stapelID), String.valueOf(setID)});
+        db.close();
+    }
+
     public void deleteKarte(int karteID, int stapelID, int setID) {
         SQLiteDatabase db = this.getWritableDatabase();
 

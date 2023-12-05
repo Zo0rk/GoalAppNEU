@@ -12,15 +12,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="right"
+        >
 
         <Button
             android:id="@+id/buttonSaveChangesCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Speichern"
-            android:visibility="gone"
             android:background="@color/darkmode5"
+            android:visibility="gone"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="10dp"
             />
         <Button
             android:id="@+id/buttonDiscardChangesCard"
@@ -28,7 +32,9 @@
             android:layout_height="wrap_content"
             android:text="Abbrechen"
             android:background="@color/darkmode5"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="10dp">
         </Button>
 
         <ImageButton
@@ -40,7 +46,7 @@
             android:src="@drawable/baseline_more_horiz_24"
             android:background="@color/darkmode1"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="350dp"
+            android:layout_marginHorizontal="10dp"
             />
     </LinearLayout>
 

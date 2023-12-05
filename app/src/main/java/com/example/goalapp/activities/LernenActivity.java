@@ -80,8 +80,6 @@ public class LernenActivity extends AppCompatActivity implements View.OnClickLis
         progressText.setText(" ~ " + valueOf(db.getStapelStatus(stapelID,setID))+"%");
         status.setText("< " + valueOf(db.getAnzSichereKartenInStapel(stapelID,setID)) + " / " + db.getAnzKartenInStapel(stapelID,setID) + " Sicher beantwortet >");
         frage.setText(db.getFrage(setID,stapelID, randomKartenID));
-
-
     }
 
     private void zeigeAntwort(int kartenID){

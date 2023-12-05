@@ -36,7 +36,7 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
     private TextView textViewQuestion;
     private TextView textViewAnswer;
     private EditText editTextQuestion;
-    private EditText getEditTextAnswer;
+    private EditText editTextAnswer;
     private Button buttonShowAnswer;
     private Button buttonApply;
     private Button buttonDiscard;
@@ -60,7 +60,7 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
         textViewQuestion = findViewById(R.id.textViewQuestion);
         textViewAnswer = findViewById(R.id.textViewAnswer);
         editTextQuestion = findViewById(R.id.editTextViewQuestion);
-        getEditTextAnswer = findViewById(R.id.editTextViewAnswer);
+        editTextAnswer = findViewById(R.id.editTextViewAnswer);
         buttonShowAnswer = findViewById(R.id.buttonShowAnswer);
         buttonsContainer = findViewById(R.id.buttonsContainer);
         buttonSettings = findViewById(R.id.buttonSettings);
@@ -72,11 +72,27 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
         buttonApply = findViewById(R.id.buttonSaveChangesCard);
         buttonDiscard = findViewById(R.id.buttonDiscardChangesCard);
 
-        // Setze initialen Text für Frage und Antwort
-        textViewQuestion.setText("Was ist die Hauptstadt von Deutschland?");
-        textViewAnswer.setText("Berlin");
+        buttonApply.setOnClickListener(view -> {
+            String neueFrage = String.valueOf(editTextQuestion.getText());
+            String neueAntwort = String.valueOf(editTextAnswer.getText());
+            datenBankManager.updateKarte(aktuellekarteID, stapelID, setID, neueFrage, neueAntwort);
+            recreate();
+        });
+        
+        buttonDiscard.setOnClickListener(view -> {
+            editTextQuestion.setVisibility(View.GONE);
+            editTextAnswer.setVisibility(View.GONE);
 
-        // Button zum Anzeigen der Antwort
+            editTextQuestion.setText(textViewQuestion.getText());
+            editTextAnswer.setText(textViewAnswer.getText());
+
+            textViewQuestion.setVisibility(View.VISIBLE);
+            textViewAnswer.setVisibility(View.VISIBLE);
+
+            buttonDiscard.setVisibility(View.GONE);
+            buttonApply.setVisibility(View.GONE);
+            buttonShowAnswer.setVisibility(View.VISIBLE);
+        });
         buttonShowAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,16 +109,17 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
             popupMenu.setOnMenuItemClickListener(menuItem -> {
                 if(menuItem.getItemId() == R.id.editKarte) {
                     editTextQuestion.setVisibility(View.VISIBLE);
-                    getEditTextAnswer.setVisibility(View.VISIBLE);
+                    editTextAnswer.setVisibility(View.VISIBLE);
 
                     editTextQuestion.setText(textViewQuestion.getText());
-                    getEditTextAnswer.setText(textViewAnswer.getText());
+                    editTextAnswer.setText(textViewAnswer.getText());
 
                     textViewQuestion.setVisibility(View.GONE);
                     textViewAnswer.setVisibility(View.GONE);
 
                     buttonDiscard.setVisibility(View.VISIBLE);
                     buttonApply.setVisibility(View.VISIBLE);
+                    buttonShowAnswer.setVisibility(View.GONE);
 //                    return true;
                 } else if(menuItem.getItemId() == R.id.deleteKarte) {
                     // Popup um Löschen zu bestätigen
