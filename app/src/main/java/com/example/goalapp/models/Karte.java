@@ -9,9 +9,11 @@ public class Karte implements Comparable<Karte> {
     private int setId;
     private long letztesLerndatum;
     private long naechstesLerndatum;
+    private double easinessFactor;
+    private double interval;
 
     // Konstruktor
-    public Karte(int karteId, String frage, String antwort, int status, int stapelId, int setId, long letztesLerndatum, long naechstesLerndatum) {
+    public Karte(int karteId, String frage, String antwort, int status, int stapelId, int setId, long letztesLerndatum, long naechstesLerndatum, double easinessFactor, int interval) {
         this.karteId = karteId;
         this.frage = frage;
         this.antwort = antwort;
@@ -20,9 +22,37 @@ public class Karte implements Comparable<Karte> {
         this.setId = setId;
         this.letztesLerndatum = letztesLerndatum;
         this.naechstesLerndatum = naechstesLerndatum;
+        this.easinessFactor = easinessFactor;
+        this.interval = interval;
     }
 
+    public void updateEasinessFactor(double grade) {
+        easinessFactor = easinessFactor + 0.1 - (4 - grade) * (0.08 + (4 - grade) * 0.02);
+        if (easinessFactor < 1.3) {
+            easinessFactor = 1.3; // Mindestwert für den Easiness-Faktor
+        }
+    }
+    public void updateInterval(double factor) {
+        interval *= factor;
+    }
+    
     // Getter und Setter für alle Felder
+
+    public double getEasinessFactor() {
+        return easinessFactor;
+    }
+
+    public void setEasinessFactor(double easinessFactor) {
+        this.easinessFactor = easinessFactor;
+    }
+
+    public double getInterval() {
+        return interval;
+    }
+
+    public void setInterval(double interval) {
+        this.interval = interval;
+    }
 
     public int getKarteId() {
         return karteId;

@@ -31,8 +31,9 @@ import java.util.List;
 
 public class LernenSpacedRepetitionActivity extends AppCompatActivity {
 
-    private ProgressBar progressBar;
 
+    private List<Karte> cardQueue;
+    private ProgressBar progressBar;
     private TextView textViewQuestion;
     private TextView textViewAnswer;
     private EditText editTextQuestion;
@@ -51,6 +52,8 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lernen_spaced_repetition);
+
+
 
         stapelID = getIntent().getIntExtra("STAPEL_ID",0);
         setID = getIntent().getIntExtra("SET_ID",0);
@@ -132,26 +135,57 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
         });
 
         buttonEasy.setOnClickListener(view -> {
-            updateKarteStatus(4);
-            loadNextQuestion();
+//            calculateNextInterval();
+//            updateKarteStatus(4);
+//            loadNextQuestion();
         });
 
         buttonGood.setOnClickListener(view -> {
-            updateKarteStatus(3);
-            loadNextQuestion();
+//            updateKarteStatus(3);
+//            loadNextQuestion();
         });
 
         buttonHard.setOnClickListener(view -> {
-            updateKarteStatus(2);
-            loadNextQuestion();
+//            updateKarteStatus(2);
+//            loadNextQuestion();
         });
 
         buttonAgain.setOnClickListener(view -> {
-            updateKarteStatus(1);
-            loadNextQuestion();
+//            updateKarteStatus(1);
+//            loadNextQuestion();
         });
 
         loadNextQuestion();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        datenBankManager = new DatenBankManager(this);
+        cardQueue = datenBankManager.waehleZuLernendeKarten();
+    }
+    public Karte getNextCard() {
+        // Sortiere die Karten nach aufsteigendem Intervall und absteigendem Easiness-Faktor.
+        Collections.sort(cardQueue, (card1, card2) -> {
+            if (card1.getInterval() == card2.getInterval()) {
+                return Double.compare(card2.getEasinessFactor(), card1.getEasinessFactor());
+            }
+            return Double.compare(card1.getInterval(), card2.getInterval());
+        });
+
+        // Wähle die erste Karte aus der sortierten Liste.
+        if (!cardQueue.isEmpty()) {
+            return cardQueue.get(0);
+        } else {
+            return null;  // Wenn die Warteschlange leer ist, gibt es keine Karte zum Lernen.
+        }
+    }
+
+    public void calculateNextInterval(Karte card, double grade, double factor) {
+        card.updateEasinessFactor(grade);
+        card.updateInterval(factor);
+
+        //TODO: Speichern in Datenbank
     }
     private void loadNextQuestion() {
 /*        List<Karte> zuLernendeKarten = datenBankManager.waehleZuLernendeKarten();

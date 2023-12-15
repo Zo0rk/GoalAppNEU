@@ -59,6 +59,8 @@ public class DatenBankManager extends SQLiteOpenHelper {
                         "SET_ID" + " INTEGER, " +
                         "LETZTES_LERNDATUM" + " LONG, " +
                         "NAECHSTES_LERNDATUM" + " LONG, " +
+                        "INTERVAL" + " INTEGER, " +
+                        "EASINESS_FACTOR" + " REAL, " +
                         "CONSTRAINT karte_pk PRIMARY KEY (KARTE_ID, STAPEL_ID, SET_ID), "+
                         "CONSTRAINT karte_fk FOREIGN KEY (STAPEL_ID, SET_ID) REFERENCES STAPEL(STAPEL_ID, SET_ID) ON DELETE CASCADE" +
                          ");"
@@ -292,8 +294,10 @@ public class DatenBankManager extends SQLiteOpenHelper {
             int status = cursor.getInt(cursor.getColumnIndexOrThrow("KARTE_STATUS"));
             long letztesLerndatum = cursor.getLong(cursor.getColumnIndexOrThrow("LETZTES_LERNDATUM"));
             long naechstesLerndatum = cursor.getLong(cursor.getColumnIndexOrThrow("NAECHSTES_LERNDATUM"));
+            double easinessFactor = cursor.getDouble(cursor.getColumnIndexOrThrow("EASINESS_FACTOR"));
+            int interval = cursor.getInt((cursor.getColumnIndexOrThrow("INTERVAL")));
 
-            aeltesteKarte = new Karte(id, frage, antwort, status , stapelId, setId, letztesLerndatum, naechstesLerndatum);
+            aeltesteKarte = new Karte(id, frage, antwort, status , stapelId, setId, letztesLerndatum, naechstesLerndatum, easinessFactor, interval);
         }
 
         if (cursor != null) {
@@ -306,7 +310,8 @@ public class DatenBankManager extends SQLiteOpenHelper {
     }
 
     public List<Karte> waehleZuLernendeKarten() {
-        List<Karte> zuLernendeKarten = new ArrayList<>();
+        List<Karte> cardsToLearn = new ArrayList<>();
+
         SQLiteDatabase db = this.getReadableDatabase();
         long aktuellesDatum = System.currentTimeMillis();
         long endeDesTagesHeuteDatum = aktuellesDatum + + TimeUnit.DAYS.toMillis(1) - 1; // bis 23:59:59 Uhr
@@ -328,9 +333,11 @@ public class DatenBankManager extends SQLiteOpenHelper {
                 int setId = cursor.getInt(cursor.getColumnIndexOrThrow("SET_ID"));
                 long letztesLerndatum = cursor.getLong(cursor.getColumnIndexOrThrow("LETZTES_LERNDATUM"));
                 long naechstesLerndatum = cursor.getLong(cursor.getColumnIndexOrThrow("NAECHSTES_LERNDATUM"));
+                double easinessFactor = cursor.getDouble(cursor.getColumnIndexOrThrow("EASINESS_FACTOR"));
+                int interval = cursor.getInt((cursor.getColumnIndexOrThrow("INTERVAL")));
 
-                Karte karte = new Karte(id, frage, antwort, status, stapelId, setId, letztesLerndatum, naechstesLerndatum);
-                zuLernendeKarten.add(karte);
+                Karte karte = new Karte(id, frage, antwort, status, stapelId, setId, letztesLerndatum, naechstesLerndatum, easinessFactor, interval);
+                cardsToLearn.add(karte);
             } while (cursor.moveToNext());
 
             cursor.close();
@@ -338,7 +345,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         // Schließe die Verbindung zur Datenbank
         db.close();
 
-        return zuLernendeKarten;
+        return cardsToLearn;
     }
 
     // STAPEL-TABLE-METHODEN------------------------------------------------------------------------------------------------------------------------
