@@ -59,7 +59,7 @@ public class KarteErstellenActivity extends AppCompatActivity implements View.On
 
             if(!(frage == null || antwort == null || frage.trim().equals("") || antwort.trim().equals(""))){
                 DatenBankManager db = new DatenBankManager(this);
-                db.insertKarte(frage, antwort, stapel_id, set_id,1);
+                db.insertKarte(frage, antwort, stapel_id, set_id);
 
                 toast = Toast.makeText(this, "✓ Karte hinzugefügt! ", Toast.LENGTH_SHORT);
                 toast.show();

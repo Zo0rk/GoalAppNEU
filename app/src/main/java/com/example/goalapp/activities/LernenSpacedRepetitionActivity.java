@@ -24,8 +24,10 @@ import com.example.goalapp.models.Karte;
 import com.example.goalapp.R;
 import com.example.goalapp.database.DatenBankManager;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 
@@ -47,13 +49,15 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
     private int setID;
     private int aktuellekarteID;
     private DatenBankManager datenBankManager;
+    private Karte currentCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lernen_spaced_repetition);
 
-
+        datenBankManager = new DatenBankManager(this);
+        cardQueue = datenBankManager.waehleZuLernendeKarten();
 
         stapelID = getIntent().getIntExtra("STAPEL_ID",0);
         setID = getIntent().getIntExtra("SET_ID",0);
@@ -96,14 +100,11 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
             buttonApply.setVisibility(View.GONE);
             buttonShowAnswer.setVisibility(View.VISIBLE);
         });
-        buttonShowAnswer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Antwort anzeigen und Buttons für Bewertung sichtbar machen
-                textViewAnswer.setVisibility(View.VISIBLE);
-                buttonsContainer.setVisibility(View.VISIBLE);
-                buttonShowAnswer.setVisibility(View.INVISIBLE);
-            }
+        buttonShowAnswer.setOnClickListener(view -> {
+            // Antwort anzeigen und Buttons für Bewertung sichtbar machen
+            textViewAnswer.setVisibility(View.VISIBLE);
+            buttonsContainer.setVisibility(View.VISIBLE);
+            buttonShowAnswer.setVisibility(View.INVISIBLE);
         });
 
         buttonSettings.setOnClickListener(view -> {
@@ -135,35 +136,29 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
         });
 
         buttonEasy.setOnClickListener(view -> {
-//            calculateNextInterval();
-//            updateKarteStatus(4);
-//            loadNextQuestion();
+            updateCard(currentCard, 4);
+            loadAndShowNextCard();
         });
 
         buttonGood.setOnClickListener(view -> {
-//            updateKarteStatus(3);
-//            loadNextQuestion();
+            updateCard(currentCard, 3);
+            loadAndShowNextCard();;
         });
 
         buttonHard.setOnClickListener(view -> {
-//            updateKarteStatus(2);
-//            loadNextQuestion();
+            updateCard(currentCard, 2);
+            loadAndShowNextCard();
         });
 
         buttonAgain.setOnClickListener(view -> {
-//            updateKarteStatus(1);
-//            loadNextQuestion();
+            updateCard(currentCard, 1);
+            loadAndShowNextCard();
         });
 
-        loadNextQuestion();
+        loadAndShowNextCard();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        datenBankManager = new DatenBankManager(this);
-        cardQueue = datenBankManager.waehleZuLernendeKarten();
-    }
+    //Wählt die Karte aus der Warteschlange mit dem gerningsten Intervall und Easinessfaktor
     public Karte getNextCard() {
         // Sortiere die Karten nach aufsteigendem Intervall und absteigendem Easiness-Faktor.
         Collections.sort(cardQueue, (card1, card2) -> {
@@ -181,20 +176,42 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
         }
     }
 
-    public void calculateNextInterval(Karte card, double grade, double factor) {
+    public void updateCard(Karte card, int grade) {
         card.updateEasinessFactor(grade);
-        card.updateInterval(factor);
+        int cardID = currentCard.getKarteId();
+        int interval = currentCard.getInterval();
+        double easinessFactor = currentCard.getEasinessFactor();
+        long letztes_lerndatum = card.getLetztesLerndatum();
+        long naechstes_lerndatum = card.getNaechstesLerndatum();
 
-        //TODO: Speichern in Datenbank
+        Date datum =new Date(naechstes_lerndatum);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        String formattedDate = dateFormat.format(datum);
+
+        Toast.makeText(this, "Nächstes Lerndatum: " + formattedDate, Toast.LENGTH_SHORT).show();
+        datenBankManager.updateKarteIntervalAndDate(cardID, stapelID, setID, interval, easinessFactor, letztes_lerndatum, naechstes_lerndatum);
+
+        if(grade != 1 && grade !=2) {
+            if(card.getNaechstesLerndatum() >= System.currentTimeMillis()) {
+                cardQueue.remove(card);
+            }
+        }
     }
-    private void loadNextQuestion() {
-/*        List<Karte> zuLernendeKarten = datenBankManager.waehleZuLernendeKarten();
-        if(!zuLernendeKarten.isEmpty()) {
-            Karte nextCard = zuLernendeKarten.get(0);
-            aktuellekarteID = nextCard.getKarteId();
-            textViewQuestion.setText(nextCard.getFrage());
-            textViewAnswer.setText(nextCard.getAntwort());*/
-        Karte zuLernendeKarte = datenBankManager.waehleAeltesteFaelligeKarte(stapelID, setID);
+    private void loadAndShowNextCard() {
+//        Karte zuLernendeKarte = datenBankManager.waehleAeltesteFaelligeKarte(stapelID, setID);
+//        if(zuLernendeKarte != null) {
+//            aktuellekarteID = zuLernendeKarte.getKarteId();
+//            textViewQuestion.setText(zuLernendeKarte.getFrage());
+//            textViewAnswer.setText(zuLernendeKarte.getAntwort());
+//
+//            textViewAnswer.setVisibility(View.INVISIBLE);
+//            buttonsContainer.setVisibility(View.GONE);
+//            buttonShowAnswer.setVisibility(View.VISIBLE);
+//        } else {
+//            Toast.makeText(this, "Alle Karten für heute wurden gelernt", Toast.LENGTH_SHORT).show();
+//            finish();
+//        }
+        Karte zuLernendeKarte = getNextCard();
         if(zuLernendeKarte != null) {
             aktuellekarteID = zuLernendeKarte.getKarteId();
             textViewQuestion.setText(zuLernendeKarte.getFrage());
@@ -207,13 +224,14 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
             Toast.makeText(this, "Alle Karten für heute wurden gelernt", Toast.LENGTH_SHORT).show();
             finish();
         }
+        currentCard = zuLernendeKarte;
     }
     // 1 - nochmal, 2 - schwer, 3 - gut, 4 - einfach
-    private void updateKarteStatus(int difficulty) {
-        DatenBankManager db = new DatenBankManager(this);
-        db.updateKarteStatus(aktuellekarteID, stapelID, setID, difficulty);
-        db.close();
-    }
+//    private void updateKarteStatus(int difficulty) {
+//        DatenBankManager db = new DatenBankManager(this);
+//        db.updateKarteStatus(aktuellekarteID, stapelID, setID, difficulty);
+//        db.close();
+//    }
 
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -226,11 +244,8 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
                 recreate();
             }
         });
-        builder.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Hier kannst du Aktionen ausführen, wenn der Benutzer "Nein" auswählt
-            }
+        builder.setNegativeButton("Nein", (dialog, which) -> {
+            // Hier kannst du Aktionen ausführen, wenn der Benutzer "Nein" auswählt
         });
         builder.show();
     }

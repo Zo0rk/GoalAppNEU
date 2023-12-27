@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DatenBankManager extends SQLiteOpenHelper {
 
-    public static final int DATENBANK_VERSION = 1;
+    public static final int DATENBANK_VERSION = 2;
     public static final String DATENBANK_NAMEN = "Karteikarten.db";
     public DatenBankManager(Context cxt) {
         super(cxt, DATENBANK_NAMEN, null, DATENBANK_VERSION);
@@ -59,7 +59,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
                         "SET_ID" + " INTEGER, " +
                         "LETZTES_LERNDATUM" + " LONG, " +
                         "NAECHSTES_LERNDATUM" + " LONG, " +
-                        "INTERVAL" + " INTEGER, " +
+                        "INTERVAL" + " REAL, " +
                         "EASINESS_FACTOR" + " REAL, " +
                         "CONSTRAINT karte_pk PRIMARY KEY (KARTE_ID, STAPEL_ID, SET_ID), "+
                         "CONSTRAINT karte_fk FOREIGN KEY (STAPEL_ID, SET_ID) REFERENCES STAPEL(STAPEL_ID, SET_ID) ON DELETE CASCADE" +
@@ -73,6 +73,20 @@ public class DatenBankManager extends SQLiteOpenHelper {
         ContentValues updateValues = new ContentValues();
         updateValues.put("KARTE_FRAGE", neueFrage);
         updateValues.put("KARTE_ANTWORT", neueAntwort);
+
+        db.update("KARTE",updateValues, "KARTE_ID = ? AND STAPEL_ID = ? AND SET_ID = ?",
+                new String[]{String.valueOf(karteID), String.valueOf(stapelID), String.valueOf(setID)});
+        db.close();
+    }
+    public void updateKarteIntervalAndDate(int karteID, int stapelID, int setID, int interval, double easinessFactor, long letztes_lerndatum, long naechstes_lerndatum) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues updateValues = new ContentValues();
+        updateValues.put("INTERVAL", interval);
+        updateValues.put("EASINESS_FACTOR", easinessFactor);
+        updateValues.put("LETZTES_LERNDATUM",letztes_lerndatum);
+        updateValues.put("NAECHSTES_LERNDATUM",naechstes_lerndatum);
+
 
         db.update("KARTE",updateValues, "KARTE_ID = ? AND STAPEL_ID = ? AND SET_ID = ?",
                 new String[]{String.valueOf(karteID), String.valueOf(stapelID), String.valueOf(setID)});
@@ -137,7 +151,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
         return ret;
     }
 
-    public void insertKarte(String frage, String antwort, int stapelId, int setId, int status) {
+    public void insertKarte(String frage, String antwort, int stapelId, int setId) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Abfrage, um den höchsten Wert von KARTE_ID für die gegebene SET_ID und STAPEL_ID zu ermitteln
@@ -156,9 +170,10 @@ public class DatenBankManager extends SQLiteOpenHelper {
         neueZeile.put("KARTE_ID", neueKarteID);
         neueZeile.put("KARTE_FRAGE", frage);
         neueZeile.put("KARTE_ANTWORT", antwort);
-        neueZeile.put("KARTE_STATUS", status);
         neueZeile.put("STAPEL_ID", stapelId);
         neueZeile.put("SET_ID", setId);
+        neueZeile.put("INTERVAL",60000); // Eine Minute als Basisintervall
+        neueZeile.put("EASINESS_FACTOR", 2.5); // Initalwert
         neueZeile.put("LETZTES_LERNDATUM", aktuellesDatum);
         neueZeile.put("NAECHSTES_LERNDATUM", naechstesLerndatum);
 
@@ -185,7 +200,7 @@ public class DatenBankManager extends SQLiteOpenHelper {
 
     public Cursor getAllKarten(int setId, int stapelId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT KARTE_ID as _id, KARTE_FRAGE, KARTE_ANTWORT FROM KARTE " +
+        String query = "SELECT KARTE_ID as _id, KARTE_FRAGE, KARTE_ANTWORT, NAECHSTES_LERNDATUM FROM KARTE " +
                 "WHERE SET_ID = ? AND STAPEL_ID = ?";
         String[] selectionArgs = {String.valueOf(setId), String.valueOf(stapelId)};
         Cursor cursor = db.rawQuery(query,selectionArgs);

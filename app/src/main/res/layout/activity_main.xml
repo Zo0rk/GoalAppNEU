@@ -45,7 +45,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="10dp"
                     android:paddingRight="50dp"
-                    android:text="ALLE STAPEL:"
+                    android:text="ALLE SETS:"
                     android:textStyle="bold"
                     android:textColor="@color/white"
                     android:textSize="25dp" />

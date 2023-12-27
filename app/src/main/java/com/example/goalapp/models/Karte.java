@@ -1,5 +1,7 @@
 package com.example.goalapp.models;
 
+import java.time.LocalDate;
+
 public class Karte implements Comparable<Karte> {
     private int karteId;
     private String frage;
@@ -10,7 +12,8 @@ public class Karte implements Comparable<Karte> {
     private long letztesLerndatum;
     private long naechstesLerndatum;
     private double easinessFactor;
-    private double interval;
+    private int interval;
+    private final double intervalmodifier = 1.5; //Konstante
 
     // Konstruktor
     public Karte(int karteId, String frage, String antwort, int status, int stapelId, int setId, long letztesLerndatum, long naechstesLerndatum, double easinessFactor, int interval) {
@@ -31,9 +34,26 @@ public class Karte implements Comparable<Karte> {
         if (easinessFactor < 1.3) {
             easinessFactor = 1.3; // Mindestwert für den Easiness-Faktor
         }
+        if (grade > 1) {
+            updateInterval(true);
+        } else {
+            updateInterval(false);
+        }
+
+
     }
-    public void updateInterval(double factor) {
-        interval *= factor;
+    public void updateInterval(boolean useIntervalmodifier) {
+        if(useIntervalmodifier) {
+            interval = (int) (interval * intervalmodifier * easinessFactor);
+        } else {
+            interval = (int) (interval * easinessFactor);
+        }
+        updateDates();
+    }
+
+    public void updateDates() {
+        letztesLerndatum = System.currentTimeMillis();
+        naechstesLerndatum = letztesLerndatum + interval;
     }
     
     // Getter und Setter für alle Felder
@@ -46,11 +66,11 @@ public class Karte implements Comparable<Karte> {
         this.easinessFactor = easinessFactor;
     }
 
-    public double getInterval() {
+    public int getInterval() {
         return interval;
     }
 
-    public void setInterval(double interval) {
+    public void setInterval(int interval) {
         this.interval = interval;
     }
 
