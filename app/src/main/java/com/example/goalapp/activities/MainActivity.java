@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity  {
             //Anschließend wird die Übersicht des Set mittels ID geöffnet...
             //Dazu benötigen wir nun die ID:
             Intent intent = new Intent(this, SetUebersichtActivity.class);
-            int id = (int) adapter.getItemId(i); //i+1, da Listelemente ab 0 gezählt werden
+            int id = (int) adapter.getItemId(i);
             intent.putExtra("SET_ID", id);
             startActivity(intent);
         });

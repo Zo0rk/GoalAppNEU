@@ -54,7 +54,8 @@ public class MainUebersichtCursorAdapter extends CursorAdapter {
         int textColor = ContextCompat.getColor(context, colorRes);
         nameTextView.setTextColor(textColor);
 
-        setProgressBar.setProgress(Integer.parseInt(setStatus));
+        int progress = db.calculateProgress(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
+        setProgressBar.setProgress(progress);
         setProgressBar.setProgressTintList(ColorStateList.valueOf(textColor));
     }
 

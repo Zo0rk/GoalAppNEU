@@ -66,9 +66,9 @@ public class KarteErstellenActivity extends AppCompatActivity implements View.On
 
                 antwortEdit.getText().clear();
                 frageEdit.getText().clear();
-                startActivity(new Intent(this, KarteErstellenActivity.class)
-                        .putExtra("SET_ID", set_id).putExtra("STAPEL_ID", stapel_id));
-                finish();
+//                startActivity(new Intent(this, KarteErstellenActivity.class)
+//                        .putExtra("SET_ID", set_id).putExtra("STAPEL_ID", stapel_id));
+//                finish();
             }
         }
 

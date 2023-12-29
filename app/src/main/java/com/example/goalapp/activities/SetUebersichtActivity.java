@@ -103,7 +103,7 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
         String setBeschreibung = db.getSetBeschreibung(id);
         String setFarbe = db.getSetFarbe(id);
         setHeaderView.setText(setHeader);
-        int progress = db.getSetProgress(id);
+        int progress = db.calculateProgress(setID);
         progressView.setText(progress + "%");
         mainProgressBar.setProgress(progress, true);
         //setBeschreibungView.setText(setBeschreibung); IST JETZT FORTSCHRITT...

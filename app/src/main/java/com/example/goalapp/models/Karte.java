@@ -13,10 +13,16 @@ public class Karte implements Comparable<Karte> {
     private long naechstesLerndatum;
     private double easinessFactor;
     private int interval;
-    private final double intervalmodifier = 1.5; //Konstante
+    private boolean graduated;
+    private final double intervalmodifier = 1.5; // Konstante
+    private int againInterval;
+    private int hardInterval;
+    private int goodInterval;
+    private int easyInterval;
 
     // Konstruktor
-    public Karte(int karteId, String frage, String antwort, int status, int stapelId, int setId, long letztesLerndatum, long naechstesLerndatum, double easinessFactor, int interval) {
+    public Karte(int karteId, String frage, String antwort, int status, int stapelId, int setId,
+                 long letztesLerndatum, long naechstesLerndatum, double easinessFactor, int interval, boolean graduated) {
         this.karteId = karteId;
         this.frage = frage;
         this.antwort = antwort;
@@ -27,33 +33,67 @@ public class Karte implements Comparable<Karte> {
         this.naechstesLerndatum = naechstesLerndatum;
         this.easinessFactor = easinessFactor;
         this.interval = interval;
+        this.graduated = graduated;
+
+        selectIntervals();
     }
 
-    public void updateEasinessFactor(double grade) {
+    public void selectIntervals() {
+        if(!graduated) {
+            againInterval = 60000;
+            hardInterval = 60000 * 6;
+            goodInterval = 60000 * 10;
+            easyInterval = 60000 * 60 * 24;
+        } else {
+            againInterval = 60000; // 1 min
+            hardInterval = 60000 * 10; // 10 min
+            goodInterval = 60000 * 60 * 24; // 1 tag
+            easyInterval = 60000 * 60 * 24 * 4; // 4 Tage
+        }
+    }
+
+    public void updateInterval(int grade) {
+        selectIntervals();
+            switch (grade) {
+                case 1:
+                    interval = againInterval;
+                    graduated = false;
+                    break;
+                case 2:
+                    interval = hardInterval;
+                    break;
+                case 3:
+                    interval = goodInterval;
+                    graduated = true;
+                    break;
+                case 4:
+                    interval = easyInterval;
+                    graduated = true;
+                    break;
+            }
+            updateDates();
+        }
+
+
+    public void updateEasinessFactor(int grade) {
         easinessFactor = easinessFactor + 0.1 - (4 - grade) * (0.08 + (4 - grade) * 0.02);
         if (easinessFactor < 1.3) {
             easinessFactor = 1.3; // Mindestwert für den Easiness-Faktor
         }
-        if (grade > 1) {
-            updateInterval(true);
-        } else {
-            updateInterval(false);
-        }
-
-
-    }
-    public void updateInterval(boolean useIntervalmodifier) {
-        if(useIntervalmodifier) {
-            interval = (int) (interval * intervalmodifier * easinessFactor);
-        } else {
-            interval = (int) (interval * easinessFactor);
-        }
-        updateDates();
     }
 
     public void updateDates() {
         letztesLerndatum = System.currentTimeMillis();
         naechstesLerndatum = letztesLerndatum + interval;
+    }
+
+    public static String fromMillisecondsToMinOrDays(int milliseconds) {
+        if(milliseconds >= (24*60*60000)){
+            return(milliseconds/(24*60*60000) + " Tage");
+        }
+        else{
+            return (milliseconds/60000 + " Min");
+        }
     }
     
     // Getter und Setter für alle Felder
@@ -141,5 +181,48 @@ public class Karte implements Comparable<Karte> {
     @Override
     public int compareTo(Karte other) {
         return Long.compare(this.naechstesLerndatum, other.naechstesLerndatum);
+    }
+    public boolean isGraduated() {
+        return graduated;
+    }
+
+    public void setGraduated(boolean graduated) {
+        this.graduated = graduated;
+    }
+
+    public double getIntervalmodifier() {
+        return intervalmodifier;
+    }
+
+    public int getAgainInterval() {
+        return againInterval;
+    }
+
+    public void setAgainInterval(int againInterval) {
+        this.againInterval = againInterval;
+    }
+
+    public int getHardInterval() {
+        return hardInterval;
+    }
+
+    public void setHardInterval(int hardInterval) {
+        this.hardInterval = hardInterval;
+    }
+
+    public int getGoodInterval() {
+        return goodInterval;
+    }
+
+    public void setGoodInterval(int goodInterval) {
+        this.goodInterval = goodInterval;
+    }
+
+    public int getEasyInterval() {
+        return easyInterval;
+    }
+
+    public void setEasyInterval(int easyInterval) {
+        this.easyInterval = easyInterval;
     }
 }
