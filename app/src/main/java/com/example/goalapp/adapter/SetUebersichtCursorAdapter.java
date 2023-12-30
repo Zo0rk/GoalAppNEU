@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.example.goalapp.R;
 import com.example.goalapp.database.DatenBankManager;
 
+import org.w3c.dom.Text;
+
 public class SetUebersichtCursorAdapter extends CursorAdapter {
 
     Context context;
@@ -30,15 +32,20 @@ public class SetUebersichtCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        String stapelId = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
+        int stapelId = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
         String stapelName = cursor.getString(cursor.getColumnIndexOrThrow("STAPEL_NAME"));
-        String setId = cursor.getString(cursor.getColumnIndexOrThrow("SET_ID"));
+        int setId = cursor.getInt(cursor.getColumnIndexOrThrow("SET_ID"));
 
         DatenBankManager db = new DatenBankManager(context);
-        int count = db.countKartenInSetUndStapel(setId, stapelId);
+        int cardsInStapel = db.countCardsInStapel(stapelId, setId);
+        int dueCardsInStapel = db.countDueCardsInStapel(stapelId, setId);
 
-        TextView blueNumber = view.findViewById(R.id.blueNumber);
-        blueNumber.setText(""+count);
+        TextView greenNumber = view.findViewById(R.id.greenNumber);
+        greenNumber.setText(""+(cardsInStapel-dueCardsInStapel));
+
+        TextView redNumber = view.findViewById(R.id.redNumber);
+        redNumber.setText(""+dueCardsInStapel);
+
 
         TextView name = view.findViewById(R.id.stapelListenElementName);
         name.setText(stapelName);

@@ -350,6 +350,35 @@ public class DatenBankManager extends SQLiteOpenHelper {
         db.close();
         return i;
     }
+    public int countCardsInStapel(int stapelId, int setId) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sql = "SELECT COUNT(*) AS cardCount FROM KARTE WHERE SET_ID = " + setId +
+        " AND STAPEL_ID = "+ stapelId;
+        Cursor cursor = db.rawQuery(sql, null);
+
+        //Wenn kein Ergebnis, z.B bei Neuinstallation der App, ist noch keine Karte da
+        if(cursor == null) {
+            return 0;
+        }
+        cursor.moveToFirst();
+        return cursor.getInt(0);
+    }
+
+    public int countDueCardsInStapel(int stapelId, int setId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        LocalDate today = LocalDate.now();
+        LocalDateTime endOfDay = LocalDateTime.of(today.plusDays(1), LocalTime.MIDNIGHT);
+        long endOfDayTimeStamp = endOfDay.toInstant(ZoneOffset.UTC).toEpochMilli();
+
+        String sql = "SELECT COUNT(*) AS cardCount FROM KARTE WHERE SET_ID = " + setId +
+                " AND STAPEL_ID = "+ stapelId +
+                " AND NAECHSTES_LERNDATUM <= " + endOfDayTimeStamp;
+
+        Cursor cursor = db.rawQuery(sql, null);
+        cursor.moveToFirst();
+        return cursor.getInt(0);
+    }
 
     public int getAnzKartenInStapel(int stapelID, int setID) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -535,8 +564,8 @@ public class DatenBankManager extends SQLiteOpenHelper {
         db.close();
     }
 
-    public int calculateProgress(int setId) {
-        int progress = 0;
+    public int countCardsInSet(int setId) {
+
         SQLiteDatabase db = this.getWritableDatabase();
         String sql = "SELECT COUNT(*) AS cardCount FROM KARTE WHERE SET_ID = " + setId;
         Cursor cursor = db.rawQuery(sql, null);
@@ -546,23 +575,31 @@ public class DatenBankManager extends SQLiteOpenHelper {
             return 0;
         }
         cursor.moveToFirst();
-        int cards = cursor.getInt(0);
+        return cursor.getInt(0);
+    }
 
-
+    public int countDueCardsInSet(int setId) {
+        SQLiteDatabase db = this.getWritableDatabase();
         LocalDate today = LocalDate.now();
         LocalDateTime endOfDay = LocalDateTime.of(today.plusDays(1), LocalTime.MIDNIGHT);
         long endOfDayTimeStamp = endOfDay.toInstant(ZoneOffset.UTC).toEpochMilli();
 
-        sql = "SELECT COUNT(*) AS cardCount FROM KARTE WHERE SET_ID = " + setId +
+        String sql = "SELECT COUNT(*) AS cardCount FROM KARTE WHERE SET_ID = " + setId +
                 " AND NAECHSTES_LERNDATUM <= " + endOfDayTimeStamp;
 
-        cursor = db.rawQuery(sql, null);
+        Cursor cursor = db.rawQuery(sql, null);
         cursor.moveToFirst();
-        int dueCards = cursor.getInt(0);
+        return cursor.getInt(0);
+    }
+
+    public int calculateProgress(int setId) {
+        int progress = 0;
+        int cards = countCardsInSet(setId);
+        int dueCards = countDueCardsInSet(setId);
 
         if(cards == 0) return 0;
 
-        progress =(int) ((double) (100*(cards-dueCards))/cards);
+        progress = (int) ((double) (100*(cards-dueCards))/cards);
 
         return progress;
     }
