@@ -190,6 +190,9 @@ public class SetUebersichtActivity extends AppCompatActivity implements View.OnC
                 Cursor cursor = db.getAllStapelFromSetID(setID);
                 adapter = new SetUebersichtCursorAdapter(SetUebersichtActivity.this, cursor);
                 stapelListView.setAdapter(adapter);
+                int progress = db.calculateProgress(setID);
+                progressView.setText(progress + "%");
+                mainProgressBar.setProgress(progress, true);
             }
         });
         builder.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
