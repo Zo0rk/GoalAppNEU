@@ -167,10 +167,10 @@ public class LernenSpacedRepetitionActivity extends AppCompatActivity {
     public Karte getNextCard() {
         // Sortiere die Karten nach aufsteigendem Intervall und absteigendem Easiness-Faktor.
         Collections.sort(cardQueue, (card1, card2) -> {
-            if (card1.getInterval() == card2.getInterval()) {
-                return Double.compare(card2.getEasinessFactor(), card1.getEasinessFactor());
+            if (card1.getNaechstesLerndatum() == card2.getNaechstesLerndatum()) {
+                return Double.compare(card2.getInterval(), card1.getInterval());
             }
-            return Double.compare(card1.getInterval(), card2.getInterval());
+            return Double.compare(card1.getNaechstesLerndatum(), card2.getNaechstesLerndatum());
         });
 
         // Wähle die erste Karte aus der sortierten Liste.

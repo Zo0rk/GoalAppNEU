@@ -41,7 +41,7 @@ public class Karte implements Comparable<Karte> {
     public void selectIntervals() {
         if(!graduated) {
             againInterval = 60000;
-            hardInterval = 60000 * 6;
+            hardInterval = 60000 * 3;
             goodInterval = 60000 * 10;
             easyInterval = 60000 * 60 * 24;
         } else {
@@ -84,7 +84,12 @@ public class Karte implements Comparable<Karte> {
 
     public void updateDates() {
         letztesLerndatum = System.currentTimeMillis();
-        naechstesLerndatum = letztesLerndatum + interval;
+        // damit evtl nicht immer die selbe karte kommt
+        if(naechstesLerndatum> System.currentTimeMillis())
+            naechstesLerndatum += interval;
+        else{
+            naechstesLerndatum = System.currentTimeMillis() + interval;
+        }
     }
 
     public static String fromMillisecondsToMinOrDays(int milliseconds) {
